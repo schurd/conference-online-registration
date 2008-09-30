@@ -66,7 +66,7 @@ class Form_Personal extends HTML_QuickForm_Page
 	
       $this->addElement('header', null, htmlentities(T_('Registration Mission-net 2009 - page 1 of 3')));
       $country = substr(strtoupper($_SESSION["resi"]), -2, 2);
-      $cost_hint = htmlentities(T_('Cost for accomodation, food and program (without travel): ')) . '<b>' . $fee_arr[$country][0] . ' Euro</b>'; 
+      $cost_hint = htmlentities(T_('Cost for accommodation, food and program (without travel): ')) . '<b>' . $fee_arr[$country][0] . ' Euro</b>'; 
       $this->addElement('select', 'parttype', htmlentities(T_('I will join the conference as:')),
         array('4'=>htmlentities(T_('Exhibitor'))),
         "title='" . htmlentities(T_('This registration page is for exhibitors only')) .
@@ -199,8 +199,8 @@ class Form_Motivation extends HTML_QuickForm_Page
       $this->addElement('select', 'exhib_pay', 'Does your organisation pay one bill for all delegates?',
         array('0'=>'No, we pay individually','1'=>'Yes, one bill only'));
 
-      $this->addElement('header', null, htmlentities(T_('Accomodation')));
-      $this->addElement('select', 'exhib_acco', 'Will you stay in an accomodation off-site(self-organized)?',
+      $this->addElement('header', null, htmlentities(T_('Accommodation')));
+      $this->addElement('select', 'exhib_acco', 'Will you stay in an accommodation off-site(self-organized)?',
         array('0'=>'No, we stay onsite','1'=>'Yes, we stay offsite'));
 
 
