@@ -430,7 +430,7 @@ class ActionProcess extends HTML_QuickForm_Action
       $text.= "\n \n";
       $text.= htmlentities(T_("Mission-Net 2009 -- Alte Neckarelzer Str. 2 -- D-74821 Mosbach"));
       $text.= "\n";
-      $text.= "info@mission-net.org";
+      $text.= $infomailaddress;
 
 
       $html = htmlentities(T_("Dear")) . " " . $values["firstname"] . "<br><br>\n";
@@ -456,7 +456,7 @@ class ActionProcess extends HTML_QuickForm_Action
       $html.= "\n<br><br>\n";
       $html.= htmlentities(T_("Mission-Net 2009 -- Alte Neckarelzer Str. 2 -- D-74821 Mosbach"));
       $html.= "\n<br>";
-      $html.= "info@mission-net.org";
+      $html.= $infomailaddress;
 
       $crlf = "\n";
 
@@ -471,8 +471,8 @@ class ActionProcess extends HTML_QuickForm_Action
         $message = $mime->get();
         $betreff = htmlentities(T_('Mission Net registration 2009')) . ' ' . $values['lastname'] . ', ' . 
 		$values['firstname'] . ', ' . $values["nationality"];
-        $headers=array( 'From' => 'register@mission-net.org',
-            'To' => 'Eva-Maria.Albert@mission-net.org',
+        $headers=array( 'From' => $registrationsenderaddress,
+            'To' => $registrationhandleraddress,
             'Cc' => 'Beth.Mueller@mission-net.org',
             'Subject' => $betreff);
         $hdrs = $mime->headers($headers);
@@ -502,15 +502,14 @@ class ActionProcess extends HTML_QuickForm_Action
       $om_message = $om_mime->get();
       $om_betreff = $values['firstname'] . ' ' . $values['lastname'] . ' hat sich angemeldet. No.: ' . $last_id;
 
-      $om_headers=array( 'From' => 'register@mission-net.org',
-           'To' => 'eva-maria.albert@mission-net.org',
+      $om_headers=array( 'From' => $registrationsenderaddress,
+           'To' => $registrationhandleraddress,
 	   'Cc' => 'Beth.Mueller@mission-net.org',
            'Subject' => $om_betreff);
 
       $om_hdrs = $om_mime->headers($om_headers);
-      $om_empf = 'eva-maria.albert@mission-net.org';
       $om_mail_message =& Mail::factory('mail');
-      $om_mail_message->send ($om_empf, $om_hdrs, $om_message);
+      $om_mail_message->send ($registrationhandleraddress, $om_hdrs, $om_message);
       if (PEAR::isError($om_mail_message))
       { die ($om_mail_message->getMessage());
       }
