@@ -66,7 +66,7 @@ class Form_Personal extends HTML_QuickForm_Page
 	
       $this->addElement('header', null, htmlentities(T_('Registration Mission-net 2009 - page 1 of 3')));
       $country = substr(strtoupper($_SESSION["resi"]), -2, 2);
-      $cost_hint = htmlentities(T_('Cost for accomodation, food and program (without travel): ')) . '<b>' . $fee_arr[$country][0] . ' Euro</b>'; 
+      $cost_hint = htmlentities(T_('Cost for accommodation, food and program (without travel): ')) . '<b>' . $fee_arr[$country][0] . ' Euro</b>'; 
       $this->addElement('select', 'parttype', htmlentities(T_('I will join the conference as:')),
         array('4'=>htmlentities(T_('Staff'))),
         "title='" . htmlentities(T_('This registration page is for staff only')) .
@@ -172,45 +172,19 @@ class Form_Motivation extends HTML_QuickForm_Page
       $this->addElement('header', null, htmlentities(T_('Registration Mission-net 2009 - page 2 of 3')));
 
       $this->addElement('header', null, htmlentities(T_('Other personal data')));
-      $this->addElement('textarea','other_conf', htmlentities(T_('Other mission conferences attended? Which ones?')),array('wrap'=>'soft','rows'=>'3','cols'=>'40'));
 
-      $work_sql = 'SELECT id, name FROM languages ORDER by id';
-      $erg =& $mdb2->query($work_sql);
-        if (PEAR::isError($erg)) {
-           die ($erg->getMessage());
-        }
-        while (($row = $erg->fetchRow())) {
-                $s_arr[$row[0]] = $row[1];
-        }
-
-	$erg->Free();
-      $this->addElement('select', 'mother_tongue', htmlentities(T_('Please select your mother tongue:')), $s_arr);
-      unset($s_arr);
-      $s_arr = array('0' => htmlentities(T_('brilliant')), '1'=>htmlentities(T_('fluent')),
-      	'2'=>htmlentities(T_('basic')),'3'=>htmlentities(T_('non-existing')));
-      $this->addElement('select', 'german_skill', htmlentities(T_('My german skills:')), $s_arr);
-      $this->addElement('select', 'english_skill', htmlentities(T_('My english skills:')), $s_arr);
       $this->addElement('static','dietary_hint',htmlentities(T_('Dietary Information')),
         htmlentities(T_('Wholefood and vegeterian food will be provided, but we can not provide any other diet!')));
 
-      $this->addElement('header', null, htmlentities(T_('Organisation details')));
-      $this->addElement('text', 'exhib_name', htmlentities(T_('Name of Organisation:')), array('size' => 40, 'maxlength' => 55));
-      $this->addElement('text', 'exhib_code', htmlentities(T_('Organisation ID Code:')), array('size' => 7, 'maxlength' => 20));
-      $this->addElement('select', 'exhib_pay', 'Does your organisation pay one bill for all delegates?',
-        array('0'=>'No, we pay individually','1'=>'Yes, one bill only'));
-
-      $this->addElement('header', null, htmlentities(T_('Accomodation')));
-      $this->addElement('select', 'exhib_acco', 'Will you stay in an accomodation off-site(self-organized)?',
+      $this->addElement('header', null, htmlentities(T_('Accommodation')));
+      $this->addElement('select', 'exhib_acco', 'Will you stay in an accommodation off-site(self-organized)?',
         array('0'=>'No, we stay onsite','1'=>'Yes, we stay offsite'));
-
 
       //Buttons hinzufuegen 
       $navi[] = $this->createElement('submit', $this->getButtonName('back'), utf8_encode(T_('Back to previous page'))); 
       $navi[] = $this->createElement('submit', $this->getButtonName('next'), utf8_encode(T_('Proceed to next page'))); 
       $this->addGroup($navi, null, '', '&nbsp;'); 
 
-      $this->addRule('exhib_name', htmlentities(T_('Please enter a name for your Organisation')), 'required');
-      $this->addRule('exhib_code', htmlentities(T_('Please enter the Organisation ID Code')), 'required');
       $this->applyFilter('__ALL__','trim');
       $this->setDefaultAction('next'); 
    } 
@@ -234,7 +208,7 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
   	<html>
   	<head>
     	  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">";
-      echo "<title>" . htmlentities(T_("Mission-net Online Registration 2009")) . "</title>";
+      echo "<title>" . htmlentities(T_("Mission-net Staff Online Registration 2009")) . "</title>";
       echo "  <style type=\"text/css\">
                 @import url(\"formate.css\");
           </style>
@@ -272,9 +246,6 @@ class Form_Bankdaten extends HTML_QuickForm_Page
       $this->_formBuilt = true;
       $mdb2 =& MDB2::singleton();
       $this->addElement('header', null, htmlentities(T_('Registration Mission-net 2009 - page 3 of 3')));
-
-      $this->addElement('static','couns_hint',htmlentities(T_('Information')),
-        htmlentities(T_('We will review your application, but can not guarantee cooperation! We will let you know until 2009.')));
 
       $this->addElement('header', null, htmlentities(T_('Hints and Conditions')));
       $this->addElement('static','dietary_hint',htmlentities(T_('Dietary Information')), 
