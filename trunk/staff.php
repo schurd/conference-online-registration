@@ -50,7 +50,7 @@ class Form_Personal extends HTML_QuickForm_Page
       $mdb2 =& MDB2::singleton(); 
       // create Form 
 
-	// List der Länder laden
+      // List der Länder laden
       $work_sql = 'SELECT id, name, iso_code, fee, service_team_fee FROM countries ORDER by name';
       $c_arr['0'] = htmlentities(T_('undefined'));
       $fee_arr['0'] = htmlentities(T_('undefined'));
@@ -64,16 +64,16 @@ class Form_Personal extends HTML_QuickForm_Page
         }
       $erg->free();
 	
-      $this->addElement('header', null, htmlentities(T_('Registration Mission-net 2009 - page 1 of 3')));
+      $this->addElement('header', null, htmlentities(T_('Registration for Staff at Mission-net 2009 - page 1 of 3')));
       $country = substr(strtoupper($_SESSION["resi"]), -2, 2);
       $cost_hint = htmlentities(T_('Cost for accommodation, food and program (without travel): ')) . '<b>' . $fee_arr[$country][0] . ' Euro</b>'; 
-      $this->addElement('select', 'parttype', htmlentities(T_('I will join the conference as:')),
-        array('4'=>htmlentities(T_('Staff'))),
-        "title='" . htmlentities(T_('This registration page is for staff only')) .
-        "' onChange='GehZu(document.seite1.parttype.value);'" );
+      $this->addElement('select', 'parttype', 'I will join the conference as or will work in:',
+        array('10'=>'Supervisor in:', '11'=>'Band', '12'=>'Preacher', '13'=>'Logistics', '14'=>'National Motivator for:', '15'=>'Others:'),
+        'title=This registration page is for staff only');
+      $this->addElement('text', 'staff_text', "Details for your job/area:", array('size' => 55, 'maxlength' => 70));
       $this->setDefaults(array('parttype' => $_SESSION["part_type"]));
 
-      $this->addElement('select', 'country', htmlentities(T_('Country:')), $c_arr, 
+      $this->addElement('select', 'country', htmlentities(T_('Country of residence:')), $c_arr, 
 	"title='" . htmlentities(T_('Please choose your country of residence')) . 
 	"' onChange='Gang(document.seite1.country.value);'" );
       $this->setDefaults(array('country' => $fee_arr[$country][2]));
@@ -169,7 +169,7 @@ class Form_Motivation extends HTML_QuickForm_Page
       $this->_formBuilt = true; 
       $mdb2 =& MDB2::singleton();
 
-      $this->addElement('header', null, htmlentities(T_('Registration Mission-net 2009 - page 2 of 3')));
+      $this->addElement('header', null, htmlentities(T_('Registration for Staff at Mission-net 2009 - page 2 of 3')));
 
       $this->addElement('header', null, htmlentities(T_('Other personal data')));
 
@@ -245,7 +245,7 @@ class Form_Bankdaten extends HTML_QuickForm_Page
    {
       $this->_formBuilt = true;
       $mdb2 =& MDB2::singleton();
-      $this->addElement('header', null, htmlentities(T_('Registration Mission-net 2009 - page 3 of 3')));
+      $this->addElement('header', null, htmlentities(T_('Registration for staff at Mission-net 2009 - page 3 of 3')));
 
       $this->addElement('header', null, htmlentities(T_('Hints and Conditions')));
       $this->addElement('static','dietary_hint',htmlentities(T_('Dietary Information')), 
