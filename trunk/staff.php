@@ -68,10 +68,9 @@ class Form_Personal extends HTML_QuickForm_Page
       $country = substr(strtoupper($_SESSION["resi"]), -2, 2);
       $cost_hint = htmlentities(T_('Cost for accommodation, food and program (without travel): ')) . '<b>' . $fee_arr[$country][0] . ' Euro</b>'; 
       $this->addElement('select', 'parttype', 'I will join the conference as or will work in:',
-        array('10'=>'Supervisor in:', '11'=>'Band', '12'=>'Preacher', '13'=>'Logistics', '14'=>'National Motivator for:', '15'=>'Others:'),
-        'title=This registration page is for staff only');
-      $this->addElement('text', 'staff_text', "Details for your job/area:", array('size' => 55, 'maxlength' => 70));
-      $this->setDefaults(array('parttype' => $_SESSION["part_type"]));
+        array('10'=>'Supervisor in:', '11'=>'Band', '12'=>'Preacher', '13'=>'Logistics', '14'=>'National Motivator for:', 
+	'15'=>'Programme', '16'=>'Others:'));
+      $this->addElement('text', 'staff_text', "Details for your job/area:", array('size' => 55, 'maxlength' => 70, 'title'=>'Please give details about your job at Mission-Net'));
 
       $this->addElement('select', 'country', htmlentities(T_('Country of residence:')), $c_arr, 
 	"title='" . htmlentities(T_('Please choose your country of residence')) . 
@@ -311,8 +310,7 @@ class ActionProcess extends HTML_QuickForm_Action
 		postcode = ?, city = ?, country = ?, phone = ?, mobile = ?, email = ?, dateofbirth = ?, maritalstatus = ?, gender = ?,
 		passport_name = ?, passport_no = ?, passport_dateofissue = ?, passport_dateofexpire = ?,
 		nationality = ?, invitation_letter = ?, emergency_firstname = ?, emergency_lastname = ?, emergency_phone = ?,
-		other_conf= ?, german_skill = ?, english_skill = ?,
-		mother_tongue = ?, part_type = ?, church_name = ?, church_deno = ?, jobwish_1 = ?, jobwish_2 = ?, status = ?';
+		special_job = ?, sj_reason = ?, part_type = ?, status = ?';
       $sth = $mdb2->prepare($sql1, $typen, MDB2_PREPARE_RESULT);
 
       if (PEAR::isError($mdb2)) {
@@ -335,14 +333,9 @@ class ActionProcess extends HTML_QuickForm_Action
        $daten[] = utf8_decode($values['emergency_lastname']);
        $daten[] = $values['emergency_phone'];
 
-       $daten[] = utf8_decode($page->controller->exportValue('seite2','other_conf'));
-       $daten[] = $page->controller->exportValue('seite2','german_skill');
-       $daten[] = $page->controller->exportValue('seite2','english_skill');
-       $daten[] = $page->controller->exportValue('seite2','mother_tongue');
        $daten[] = $values['parttype'];
-       $daten[] = utf8_decode($values['exhib_name']);
-       $daten[] = $values['exhib_code'];
-       $daten[] = $page->controller->exportValue('seite2','exhib_pay');
+       $daten[] = utf8_decode($values['staff_text']);
+       $daten[] = '5';
        $daten[] = $page->controller->exportValue('seite2','exhib_acco');
        $daten[] = '1';	// status field
 
