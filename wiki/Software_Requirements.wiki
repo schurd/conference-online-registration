@@ -13,4 +13,4 @@ You need a reasonable up-to-date (L)AMP-Stack. That is Apache, MySQL and PHP. Ad
   * MDB2 and MDB2_Driver_mysql
   * Mail and Mail_Mime
 
-Additional you will need the fpdf PHP class, if you want to produce PDFs on the fly. You may get fpdf from www.fpdf.de
+Additional you will need the fpdf PHP class, if you want to produce PDFs on the fly. You may get fpdf from http://www.fpdf.de
