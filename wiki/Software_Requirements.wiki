@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary Software Requirements for the registration software.
 
 = Introduction =
 
@@ -7,7 +7,7 @@ You need to have ome software installed on your webserver to make the registrati
 
 = Details =
 
-You need a reasonable up-to-date (L)AMP-Stack. That is Apache, MySQL and PHP. Additional you need this software::
+You need a reasonable up-to-date (L)AMP-Stack. That is Apache, MySQL and PHP. Additional you need this software:
   * PEAR (pear.php.net) with the following packages
   * HTML_QuickForm and HTML_QuickForm_Controller
   * MDB2 and MDB2_Driver_mysql
