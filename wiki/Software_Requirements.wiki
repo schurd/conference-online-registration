@@ -1,0 +1,13 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+You need to have ome software installed on your webserver to make the registration work.
+
+
+= Details =
+
+You need a reasonable up-to-date (L)AMP-Stack. That is Apache, MySQL and PHP. Additional you need this software::
+  * PEAR (pear.php.net) with the following packages
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
