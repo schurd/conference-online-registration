@@ -336,7 +336,6 @@ class ActionProcess extends HTML_QuickForm_Action
        $daten[] = $values['parttype'];
        $daten[] = utf8_decode($values['staff_text']);
        $daten[] = '5';
-       $daten[] = $page->controller->exportValue('seite2','exhib_acco');
        $daten[] = '1';	// status field
 
       $affRow=$sth->execute($daten);
