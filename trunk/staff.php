@@ -68,7 +68,7 @@ class Form_Personal extends HTML_QuickForm_Page
       $country = substr(strtoupper($_SESSION["resi"]), -2, 2);
       $cost_hint = htmlentities(T_('Cost for accommodation, food and program (without travel): ')) . '<b>' . $fee_arr[$country][0] . ' Euro</b>'; 
       $this->addElement('select', 'parttype', 'I will join the conference as or will work in:',
-        array('10'=>'Supervisor in:', '11'=>'Band', '12'=>'Preacher', '13'=>'Logistics', '14'=>'National Motivator for:', 
+        array('10'=>'Supervisor in:', '11'=>'Band', '12'=>'Speaker', '13'=>'Logistics', '14'=>'National Motivator for:', 
 	'15'=>'Programme', '16'=>'Others:'));
       $this->addElement('text', 'staff_text', "Details for your job/area:", array('size' => 55, 'maxlength' => 70, 'title'=>'Please give details about your job at Mission-Net'));
 
