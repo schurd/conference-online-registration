@@ -52,8 +52,10 @@ class Form_Personal extends HTML_QuickForm_Page
 
       // List der Länder laden
       $work_sql = 'SELECT id, name, iso_code, fee, service_team_fee FROM countries ORDER by name';
-      $c_arr['0'] = htmlentities(T_('undefined'));
-      $fee_arr['0'] = htmlentities(T_('undefined'));
+      //$c_arr['0'] = htmlentities(T_('undefined'));
+      $c_arr = array();
+      //$fee_arr['0'] = htmlentities(T_('undefined'));
+      $fee_arr = array();
       $erg =& $mdb2->query($work_sql);
         if (PEAR::isError($erg)) {
            die ($erg->getMessage());
@@ -141,7 +143,6 @@ class Form_Personal extends HTML_QuickForm_Page
         'city' => array( //Rules for the town
         array(htmlentities(T_('Please enter town')),'required'),
         array(htmlentities(T_('The name of the town is too short')),'minlength',2),
-        // array(htmlentities(T_('The town contains invalid characters')),'nopunctuation',null),
         )
      ));
       $this->addRule('phone', htmlentities(T_('Please enter your phone number')), 'required',null);
@@ -212,12 +213,14 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
                 @import url(\"formate.css\");
           </style>
 	<script type=\"text/javascript\">
+	var preise = new Array();
+
 	  function GehZu(wert) {
 		var ziel = \"https://register.mission-net.org/" . $_SERVER['PHP_SELF'] . "?part_type=\" + wert;
 		window.location.href = ziel;
 	  }
           function Gang(wert) {
-                var ziel = \"https://register.mission-net.org/" . $_SERVER['PHP_SELF'] . "?resi=\" + wert;
+                var ziel = \"https://register.mission-net.org" . $_SERVER['PHP_SELF'] . "?resi=\" + wert;
                 window.location.href = ziel;
           }
 	</script>
@@ -529,7 +532,7 @@ class ActionProcess extends HTML_QuickForm_Action
 	echo htmlentities(T_("Please transfer the sum of")) . " " . $preis . " " . T_("Euro"). "<br>\n";
 	echo htmlentities(T_("to")) . "<br>" . T_("OM Europa / Mission-Net") . "<br>\n";
 	echo htmlentities(T_("Account no:")) .  " 91-479018-6" . "<br>\n";
-	echo T_("IBAN: CH41 0900 0000 9147 9018 6") . "<br>\n";
+	echo $iban . "<br>\n";
 	echo T_("SWIFT CODE: POFICHBEXXX") . "<br>\n";
 	echo T_("Address of bank:") . "Swiss Post / PostFinance / CH-3030 Bern" . "<br>\n";
 	echo htmlentities(T_("and use this reference:")) . "<b> M09-" . $last_id . "</b><br>\n";
