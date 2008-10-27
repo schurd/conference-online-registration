@@ -41,6 +41,7 @@ require_once('registration.pdf/fpdf.php');
         $this->SetFont('Arial','I',8); 
     }  
   } 
+  global $iban;
 ///*DEBUG
 //print_r($data);
 $var_prename = $data["firstname"];
