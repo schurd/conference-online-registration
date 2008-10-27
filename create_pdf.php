@@ -207,7 +207,7 @@ $pdf->SetTitle("Registration for Mission-Net 2009");
         $pdf->Write(5, T_("Account no:") . " 91-479018-6");
         $pdf->Ln();
         $pdf->SetX(100);
-        $pdf->Write(5, T_("IBAN: CH41 0900 0000 9147 9018 6"));
+        $pdf->Write(5, $iban);
         $pdf->Ln();
         $pdf->SetX(100);
         $pdf->Write(5, T_("SWIFT CODE: POFICHBEXXX"));

@@ -566,7 +566,7 @@ class ActionProcess extends HTML_QuickForm_Action
 	echo htmlentities(T_("Please transfer the sum of")) . " " . $preis . " " . T_("Euro"). "<br>\n";
 	echo htmlentities(T_("to")) . "<br>" . T_("OM Europa / Mission-Net") . "<br>\n";
 	echo htmlentities(T_("Account no:")) .  " 91-479018-6" . "<br>\n";
-	echo T_("IBAN: CH41 0900 0000 9147 9018 6") . "<br>\n";
+	echo $iban . "<br>\n";
 	echo T_("SWIFT CODE: POFICHBEXXX") . "<br>\n";
 	echo T_("Address of bank:") . "Swiss Post / PostFinance / CH-3030 Bern" . "<br>\n";
 	echo htmlentities(T_("and use this reference:")) . "<b> M09-" . $last_id . "</b><br>\n";
