@@ -40,6 +40,23 @@ function nichtleer($felder)
   } else { return true; }
 } 
 
+  $mdb2 =& MDB2::singleton(); 
+  // List der Länder laden
+  $work_sql = 'SELECT id, name, iso_code, fee, service_team_fee FROM countries ORDER by name';
+  $c_arr = array();
+  $fee_arr = array();
+  $country = substr(strtoupper($_SESSION["resi"]), -2, 2);
+  $erg =& $mdb2->query($work_sql);
+  if (PEAR::isError($erg)) {
+      die ($erg->getMessage());
+  }
+  while (($row = $erg->fetchRow())) {
+      $c_arr[$row[0]] = $row[1];
+      $fee_arr[$row[2]] = array($row[3], $row[4], $row[0]);
+  }
+  $erg->free();
+  $cost_hint = htmlentities(T_('Cost for accommodation, food and program (without travel): ')) . '<b>' . $fee_arr[$country][0] . ' Euro</b>'; 
+
 // class for the first page 
 class Form_Personal extends HTML_QuickForm_Page 
 { 
@@ -47,28 +64,13 @@ class Form_Personal extends HTML_QuickForm_Page
    public function buildForm() 
    { 
       $this->_formBuilt = true; 
-      $mdb2 =& MDB2::singleton(); 
       // create Form 
-
-      // List der Länder laden
-      $work_sql = 'SELECT id, name, iso_code, fee, service_team_fee FROM countries ORDER by name';
-      //$c_arr['0'] = htmlentities(T_('undefined'));
-      $c_arr = array();
-      //$fee_arr['0'] = htmlentities(T_('undefined'));
-      $fee_arr = array();
-      $erg =& $mdb2->query($work_sql);
-        if (PEAR::isError($erg)) {
-           die ($erg->getMessage());
-        }
-        while (($row = $erg->fetchRow())) {
-                $c_arr[$row[0]] = $row[1];
-                $fee_arr[$row[2]] = array($row[3], $row[4], $row[0]);
-        }
-      $erg->free();
-	
+      global $c_arr;
+      global $fee_arr;
+      global $cost_hint;
+      global $country;
       $this->addElement('header', null, htmlentities(T_('Registration for Staff at Mission-net 2009 - page 1 of 3')));
-      $country = substr(strtoupper($_SESSION["resi"]), -2, 2);
-      $cost_hint = htmlentities(T_('Cost for accommodation, food and program (without travel): ')) . '<b>' . $fee_arr[$country][0] . ' Euro</b>'; 
+      $cost_hint2 = "<SPAN ID='preis'>" . $cost_hint . "</SPAN>";
       $this->addElement('select', 'parttype', 'I will join the conference as or will work in:',
         array('10'=>'Supervisor in:', '11'=>'Band', '12'=>'Speaker', '13'=>'Logistics', '14'=>'National Motivator for:', 
 	'15'=>'Programme', '16'=>'Others:'));
@@ -79,7 +81,7 @@ class Form_Personal extends HTML_QuickForm_Page
 	"' onChange='Gang(document.seite1.country.value);'" );
       $this->setDefaults(array('country' => $fee_arr[$country][2]));
 
-      $this->addElement('static', 'price_hint', htmlentities(T_('Price for congress')), $cost_hint);
+      $this->addElement('static', 'price_hint', htmlentities(T_('Price for congress')), $cost_hint2);
       $this->addElement('header', null, htmlentities(T_('Personal data')));
       $this->addElement('text', 'lastname', htmlentities(T_("Lastname:")), array('size' => 40, 'maxlength' => 55));
       $this->addElement('text', 'firstname', htmlentities(T_('Firstname:')), array('size' => 40, 'maxlength' => 55));
@@ -209,19 +211,30 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
   	<head>
     	  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">";
       echo "<title>" . htmlentities(T_("Mission-net Staff Online Registration 2009")) . "</title>";
+	global $fee_arr;
+	global $cost_hint;
+	reset($fee_arr);
       echo "  <style type=\"text/css\">
                 @import url(\"formate.css\");
           </style>
 	<script type=\"text/javascript\">
-	var preise = new Array();
-
-	  function GehZu(wert) {
-		var ziel = \"https://register.mission-net.org/" . $_SERVER['PHP_SELF'] . "?part_type=\" + wert;
-		window.location.href = ziel;
-	  }
-          function Gang(wert) {
-                var ziel = \"https://register.mission-net.org" . $_SERVER['PHP_SELF'] . "?resi=\" + wert;
-                window.location.href = ziel;
+	var cost_hint = \"" . $cost_hint . "\";\n
+	var preise = new Array();\n";
+	while (list($key, $val) = each($fee_arr)) {
+	    echo "preise[$val[2]] = new Object();\n";
+	    echo "preise[$val[2]][0] = $val[0];\n";
+	    echo "preise[$val[2]][1] = $val[1];\n";
+	}
+      echo "  function Gang(wert) {
+		land = document.seite1.country.value;
+		typ = 0;
+		var epreis = preise[land][typ] + \" Euro\";
+		var cost_hint2 = cost_hint.replace(/\\d+ Euro/g, epreis);
+		if (document.all) {
+		   document.all(\"preis\").innerHTML = cost_hint2
+	        } else {
+		document.getElementById(\"preis\").innerHTML = cost_hint2
+		}
           }
 	</script>
   	</head>
@@ -532,6 +545,7 @@ class ActionProcess extends HTML_QuickForm_Action
 	echo htmlentities(T_("Please transfer the sum of")) . " " . $preis . " " . T_("Euro"). "<br>\n";
 	echo htmlentities(T_("to")) . "<br>" . T_("OM Europa / Mission-Net") . "<br>\n";
 	echo htmlentities(T_("Account no:")) .  " 91-479018-6" . "<br>\n";
+	global $iban;
 	echo $iban . "<br>\n";
 	echo T_("SWIFT CODE: POFICHBEXXX") . "<br>\n";
 	echo T_("Address of bank:") . "Swiss Post / PostFinance / CH-3030 Bern" . "<br>\n";
