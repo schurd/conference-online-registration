@@ -224,13 +224,13 @@ class Form_three extends HTML_QuickForm_Page
       $mdb2 =& MDB2::singleton();
 
       $this->addElement('header', null, htmlentities(T_('Registration Mission-net 2009 - page 3 of 4')));
-      $this->addElement('header', null, htmlentities(T_('Additional questions for those joining an IN2 team')));
+      $this->addElement('header', null, htmlentities(T_('Additional questions for those interested in joining an IN2 team')));
       //Buttons hinzufuegen
       $navi1[] = $this->createElement('submit', $this->getButtonName('back'), utf8_encode(T_('Back to previous page')));
       $navi1[] = $this->createElement('submit', $this->getButtonName('next'), utf8_encode(T_('Proceed to next page')));
       $this->addGroup($navi1, null, '', '&nbsp;');
       $this->addElement('html', '<td style="background-color: #CCCCCC; color:red;" colspan="2"><b>' . 
-	htmlentities(T_('If you are not planning to join a IN2 team, please scroll down and proceed to next page.')) . '</b></td>');
+	htmlentities(T_('If you are not planning to join a IN2 team, please proceed to next page.')) . '</b></td>');
       $this->addElement('link', 'IN2_link', htmlentities(T_('Click on this link to learn more about IN2 teams:')), 
 	'http://www.mission-net.org/in2-teams.html', htmlentities(T_('Link to IN2 information')), 'target="_blank"');
 
