@@ -225,7 +225,10 @@ class Form_three extends HTML_QuickForm_Page
 
       $this->addElement('header', null, htmlentities(T_('Registration Mission-net 2009 - page 3 of 4')));
       $this->addElement('header', null, htmlentities(T_('Additional questions for those joining an IN2 team')));
-//      $this->addElement('header', null, htmlentities(T_('If you are not planning to join a IN2 team, please scroll down and proceed to next page.')));
+      //Buttons hinzufuegen
+      $navi1[] = $this->createElement('submit', $this->getButtonName('back'), utf8_encode(T_('Back to previous page')));
+      $navi1[] = $this->createElement('submit', $this->getButtonName('next'), utf8_encode(T_('Proceed to next page')));
+      $this->addGroup($navi1, null, '', '&nbsp;');
       $this->addElement('html', '<td style="background-color: #CCCCCC; color:red;" colspan="2"><b>' . 
 	htmlentities(T_('If you are not planning to join a IN2 team, please scroll down and proceed to next page.')) . '</b></td>');
       $this->addElement('link', 'IN2_link', htmlentities(T_('Click on this link to learn more about IN2 teams:')), 
@@ -243,6 +246,7 @@ class Form_three extends HTML_QuickForm_Page
                 $s_arr[$row[0]] = $row[1];
         }
       $erg->Free();
+
       $this->addElement('select', 'IN2_wish_1', htmlentities(T_('Please select your 1st choice:')), $s_arr);
       $this->addElement('select', 'IN2_wish_2', htmlentities(T_('Please select your 2nd choice:')), $s_arr);
       $this->addElement('textarea','why_IN2', htmlentities(T_('Why do you wish to serve on an IN2 team on a mission trip?')),
@@ -357,7 +361,7 @@ class Form_Bankdaten extends HTML_QuickForm_Page
       $this->addElement('html', '<td style="background-color: #CCCCCC; color:red;" colspan="2"><b>' . 
 	htmlentities(T_('Additional questions for those joining the Service Team')) . '</b></td>');
 
-      $work_sql = 'SELECT id, work_area FROM work_area_list WHERE id <> 5 ORDER by id';
+      $work_sql = 'SELECT id, work_area FROM work_area_list WHERE id <> 5 ORDER BY id';
       unset($s_arr);
       $erg =& $mdb2->query($work_sql);
         if (PEAR::isError($erg)) {
@@ -542,11 +546,6 @@ class ActionProcess extends HTML_QuickForm_Action
       // now let's create a PDF file
       create_pdf($values, $last_id, $pdffile, $preis, $land_name);
 
-      $options = array ( 'host'  => '10.27.1.200',
-              'auth'      => false,
-              'username'  => 'user',
-              'password'  => 'geheim'
-      );
       $text = T_("Dear") . " " . $values["firstname"] . "\n\n";
       $text.= T_("we are so excited that you have just registered for Mission-net in Oldenburg, 2009. We are looking forward to meeting you and 6000 others from all over Europe.");
       $text.= "\n \n";
