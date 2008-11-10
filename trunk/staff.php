@@ -296,7 +296,9 @@ class ActionProcess extends HTML_QuickForm_Action
    function perform($page, $actionName) 
    { 
       // Auslesen der Daten 
-
+      global $registrationhandleraddress;
+      global $registrationsenderaddress;
+      global $infomailaddress;
       // function to correct the date format
       function korr_datum($datum1)
       {

@@ -40,6 +40,23 @@ function nichtleer($felder)
   } else { return true; }
 } 
 
+   $mdb2 =& MDB2::singleton(); 
+   // List der Länder laden
+   $work_sql = 'SELECT id, name, iso_code, fee, service_team_fee FROM countries ORDER by name';
+   $c_arr = array();
+   $fee_arr = array();
+   $country = substr(strtoupper($_SESSION["resi"]), -2, 2);
+   $erg =& $mdb2->query($work_sql);
+   if (PEAR::isError($erg)) {
+        die ($erg->getMessage());
+   }
+   while (($row = $erg->fetchRow())) {
+         $c_arr[$row[0]] = $row[1];
+         $fee_arr[$row[2]] = array($row[3], $row[4], $row[0]);
+   }
+   $erg->free();
+   $cost_hint = htmlentities(T_('Cost for accommodation, food and program (without travel): ')) . '<b>' . $fee_arr[$country][0] . ' Euro</b>'; 
+
 // class for the first page 
 class Form_Personal extends HTML_QuickForm_Page 
 { 
@@ -47,30 +64,18 @@ class Form_Personal extends HTML_QuickForm_Page
    public function buildForm() 
    { 
       $this->_formBuilt = true; 
-      $mdb2 =& MDB2::singleton(); 
       // create Form 
 
-	// List der Länder laden
-      $work_sql = 'SELECT id, name, iso_code, fee, service_team_fee FROM countries ORDER by name';
-      $c_arr['0'] = htmlentities(T_('undefined'));
-      $fee_arr['0'] = htmlentities(T_('undefined'));
-      $erg =& $mdb2->query($work_sql);
-        if (PEAR::isError($erg)) {
-           die ($erg->getMessage());
-        }
-        while (($row = $erg->fetchRow())) {
-                $c_arr[$row[0]] = $row[1];
-                $fee_arr[$row[2]] = array($row[3], $row[4], $row[0]);
-        }
-      $erg->free();
+      global $c_arr;
+      global $fee_arr;
+      global $cost_hint;
+      global $country;
 	
       $this->addElement('header', null, htmlentities(T_('Registration Mission-net 2009 - page 1 of 3')));
-      $country = substr(strtoupper($_SESSION["resi"]), -2, 2);
-      $cost_hint = htmlentities(T_('Cost for accommodation, food and program (without travel): ')) . '<b>' . $fee_arr[$country][0] . ' Euro</b>'; 
+      $cost_hint2 = "<SPAN ID='preis'>" . $cost_hint . "</SPAN>";
       $this->addElement('select', 'parttype', htmlentities(T_('I will join the conference as:')),
         array('4'=>htmlentities(T_('Exhibitor'))),
-        "title='" . htmlentities(T_('This registration page is for exhibitors only')) .
-        "' onChange='GehZu(document.seite1.parttype.value);'" );
+        "title='" . htmlentities(T_('This registration page is for exhibitors only')));
       $this->setDefaults(array('parttype' => $_SESSION["part_type"]));
 
       $this->addElement('select', 'country', htmlentities(T_('Country:')), $c_arr, 
@@ -78,7 +83,7 @@ class Form_Personal extends HTML_QuickForm_Page
 	"' onChange='Gang(document.seite1.country.value);'" );
       $this->setDefaults(array('country' => $fee_arr[$country][2]));
 
-      $this->addElement('static', 'price_hint', htmlentities(T_('Price for congress')), $cost_hint);
+      $this->addElement('static', 'price_hint', htmlentities(T_('Price for congress')), $cost_hint2);
       $this->addElement('header', null, htmlentities(T_('Personal data')));
       $this->addElement('text', 'lastname', htmlentities(T_("Lastname:")), array('size' => 40, 'maxlength' => 55));
       $this->addElement('text', 'firstname', htmlentities(T_('Firstname:')), array('size' => 40, 'maxlength' => 55));
@@ -235,18 +240,31 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
   	<head>
     	  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">";
       echo "<title>" . htmlentities(T_("Mission-net Online Registration 2009")) . "</title>";
+      global $fee_arr;
+      global $cost_hint;
+      reset($fee_arr);
       echo "  <style type=\"text/css\">
                 @import url(\"formate.css\");
           </style>
 	<script type=\"text/javascript\">
-	  function GehZu(wert) {
-		var ziel = \"https://register.mission-net.org/" . $_SERVER['PHP_SELF'] . "?part_type=\" + wert;
-		window.location.href = ziel;
-	  }
-          function Gang(wert) {
-                var ziel = \"https://register.mission-net.org/" . $_SERVER['PHP_SELF'] . "?resi=\" + wert;
-                window.location.href = ziel;
-          }
+	var cost_hint = \"" . $cost_hint . "\";\n
+	var preise = new Array();\n";
+      while (list($key, $val) = each($fee_arr)) {
+	   echo "preise[$val[2]] = new Object();\n";
+	   echo "preise[$val[2]][0] = $val[0];\n";
+	   echo "preise[$val[2]][1] = $val[1];\n";
+      }
+      echo "  function Gang(wert) {
+	 land = document.seite1.country.value;
+	 typ = 0;
+	 var epreis = preise[land][typ] + \" Euro\";
+	 var cost_hint2 = cost_hint.replace(/\\d+ Euro/g, epreis);
+	 if (document.all) {
+	    document.all(\"preis\").innerHTML = cost_hint2
+	 } else {
+	    document.getElementById(\"preis\").innerHTML = cost_hint2
+	 }
+	}
 	</script>
   	</head>
   	<body><div class=\"main\"><div class=\"site\">
@@ -310,7 +328,9 @@ class ActionProcess extends HTML_QuickForm_Action
    function perform($page, $actionName) 
    { 
       // Auslesen der Daten 
-
+      global $registrationsenderaddress;
+      global $registrationhandleraddress;
+      global $infomailaddress;
       // function to correct the date format
       function korr_datum($datum1)
       {
