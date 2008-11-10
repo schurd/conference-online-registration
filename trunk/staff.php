@@ -381,11 +381,6 @@ class ActionProcess extends HTML_QuickForm_Action
       // now let's create a PDF file
       create_pdf($values, $last_id, $pdffile, $preis, $land_name);
 
-      $options = array ( 'host'  => '10.27.1.200',
-              'auth'      => false,
-              'username'  => 'user',
-              'password'  => 'geheim'
-      );
       $text = T_("Dear") . " " . $values["firstname"] . "\n\n";
       $text.= T_("we are so excited that you have just registered for Mission-net in Oldenburg, 2009. We are looking forward to meeting you and 6000 others from all over Europe.");
       $text.= "\n \n";
@@ -452,7 +447,6 @@ class ActionProcess extends HTML_QuickForm_Action
 		$values['firstname'] . ', ' . $values["nationality"];
         $headers=array( 'From' => $registrationsenderaddress,
             'To' => $registrationhandleraddress,
-            'Cc' => 'Beth.Mueller@mission-net.org',
             'Subject' => $betreff);
         $hdrs = $mime->headers($headers);
         $empfaenger = $values["email"];
@@ -483,7 +477,6 @@ class ActionProcess extends HTML_QuickForm_Action
 
       $om_headers=array( 'From' => $registrationsenderaddress,
            'To' => $registrationhandleraddress,
-	   'Cc' => 'Beth.Mueller@mission-net.org',
            'Subject' => $om_betreff);
 
       $om_hdrs = $om_mime->headers($om_headers);
