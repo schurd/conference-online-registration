@@ -1,0 +1,14 @@
+#summary One-sentence summary of this page.
+This page describes how the Internationalization (I18N) of the online registration works.
+
+= Introduction =
+
+This project uses the gettext. If you want to learn more about the gettext software, please have a look here: http://www.gnu.org/software/gettext/
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
