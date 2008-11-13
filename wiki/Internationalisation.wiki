@@ -3,11 +3,13 @@ This page describes how the Internationalization (I18N) of the online registrati
 
 = Introduction =
 
-This project uses the gettext. If you want to learn more about the gettext software, please have a look here: http://www.gnu.org/software/gettext/
-
+This project uses the gettext I18N system. If you want to learn more about the gettext software, please have a look here: http://www.gnu.org/software/gettext/
+A good and verbose introduction to gettext with php ypu will find here:
+http://phpmagazin.de/itr/online_artikel/psecom,id,874,nodeid,62,_language,de.html
 
 = Details =
 
+For some reason the (in PHP) compiled in gettext did not work. So I used the php-gettext paket from Danilo Šegan.
 Add your content here.  Format your content with:
   * Text in *bold* or _italic_
   * Headings, paragraphs, and lists
