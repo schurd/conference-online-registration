@@ -14,6 +14,5 @@ For some reason the (in PHP) compiled in gettext did not work. So I used the php
 Here a some steps how to create .po files:
   * To create an empty .po file we need to run the command 
 {{{xgettext -L PHP --keyword='T_' *.php}}}
-Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
+  * This file we can send to our translators. The translators will enter the text in their language and send back the .po file. For this purpose we recommend to use the poeditor, which is a purpose-built editor for .po files. It makes it very simple to edit .po files. See http://www.poedit.net/ for more information about poedit.
   * Automatic links to other wiki pages
