@@ -10,7 +10,10 @@ http://phpmagazin.de/itr/online_artikel/psecom,id,874,nodeid,62,_language,de.htm
 = Details =
 
 For some reason the (in PHP) compiled in gettext did not work. So I used the php-gettext paket from Danilo Šegan.
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
+
+Here a some steps how to create .po files:
+  * To create an empty .po file we need to run the command 
+{{{xgettext -L PHP --keyword='T_' *.php}}}
+Text in *bold* or _italic_
   * Headings, paragraphs, and lists
   * Automatic links to other wiki pages
