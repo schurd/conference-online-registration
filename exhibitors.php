@@ -55,7 +55,7 @@ function nichtleer($felder)
          $fee_arr[$row[2]] = array($row[3], $row[4], $row[0]);
    }
    $erg->free();
-   $cost_hint = htmlentities(T_('Cost for accommodation, food and program (without travel): ')) . '<b>' . $fee_arr[$country][0] . ' Euro</b>'; 
+   $cost_hint = 'Cost for accommodation, food and program (without travel): ' . '<b>' . $fee_arr[$country][0] . ' Euro</b>'; 
 
 // class for the first page 
 class Form_Personal extends HTML_QuickForm_Page 
@@ -71,93 +71,91 @@ class Form_Personal extends HTML_QuickForm_Page
       global $cost_hint;
       global $country;
 	
-      $this->addElement('header', null, htmlentities(T_('Registration Mission-net 2009 - page 1 of 3')));
+      $this->addElement('header', null, 'Registration Mission-net 2009 - page 1 of 3');
       $cost_hint2 = "<SPAN ID='preis'>" . $cost_hint . "</SPAN>";
-      $this->addElement('select', 'parttype', htmlentities(T_('I will join the conference as:')),
-        array('4'=>htmlentities(T_('Exhibitor'))),
-        "title='" . htmlentities(T_('This registration page is for exhibitors only')));
+      $this->addElement('select', 'parttype', 'I will join the conference as:',
+        array('4'=>'Exhibitor'),
+        "title='" . 'This registration page is for exhibitors only');
       $this->setDefaults(array('parttype' => $_SESSION["part_type"]));
 
-      $this->addElement('select', 'country', htmlentities(T_('Country:')), $c_arr, 
-	"title='" . htmlentities(T_('Please choose your country of residence')) . 
+      $this->addElement('select', 'country', 'Country:', $c_arr, 
+	"title='" . 'Please choose your country of residence' . 
 	"' onChange='Gang(document.seite1.country.value);'" );
       $this->setDefaults(array('country' => $fee_arr[$country][2]));
 
-      $this->addElement('static', 'price_hint', htmlentities(T_('Price for congress')), $cost_hint2);
-      $this->addElement('header', null, htmlentities(T_('Personal data')));
-      $this->addElement('text', 'lastname', htmlentities(T_("Lastname:")), array('size' => 40, 'maxlength' => 55));
-      $this->addElement('text', 'firstname', htmlentities(T_('Firstname:')), array('size' => 40, 'maxlength' => 55));
-      $this->addElement('text', 'preferredname', htmlentities(T_('Preferred name:')), array('size' => 40, 'maxlength' => 55));
-      $this->addElement('text', 'title', htmlentities(T_('Title:')), array('size' => 40, 'maxlength' => 55));
-      $this->addElement('text', 'street', htmlentities(T_('Street:')), array('size' => 40, 'maxlength' => 55));
+      $this->addElement('static', 'price_hint', 'Price for congress', $cost_hint2);
+      $this->addElement('header', null, 'Personal data');
+      $this->addElement('text', 'firstname', 'Firstname:', array('size' => 40, 'maxlength' => 55));
+      $this->addElement('text', 'lastname', "Lastname:", array('size' => 40, 'maxlength' => 55));
+      $this->addElement('text', 'preferredname', 'Preferred name:', array('size' => 40, 'maxlength' => 55));
+      $this->addElement('text', 'title', 'Title:', array('size' => 40, 'maxlength' => 55));
+      $this->addElement('text', 'street', 'Street:', array('size' => 40, 'maxlength' => 55));
         $adresse[]=HTML_QuickForm::createElement('text','postcode','Postcode:',array('size' => 7, 'maxlength' => 7));
         $adresse[]=HTML_QuickForm::createElement('text','city','Town:',array('size' => 30, 'maxlength' => 40));
-      $this->addGroup($adresse,'plzort', htmlentities(T_('Postcode and Town:')));
+      $this->addGroup($adresse,'plzort', 'Postcode and Town:');
 
-      $this->addElement('text', 'phone', htmlentities(T_('Phone incl. country code:')), array('size' => 20, 'maxlength' => 20));
-      $this->addElement('text', 'handy', htmlentities(T_('Mobile incl. country code:')), array('size' => 20, 'maxlength' => 20));
-      $this->addElement('text', 'email', htmlentities(T_('E-mail:')), array('size' => 20, 'maxlength' => 40));
-	$s_arr = array(1 => htmlentities(T_('single')), 2 => htmlentities(T_('engaged')), 
-	3 => htmlentities(T_('married')), 4 => htmlentities(T_('divorced')), 5 => htmlentities(T_('widowed')));
-      $this->addElement('select', 'maritalstatus', htmlentities(T_('Marital Status:')), $s_arr);
+      $this->addElement('text', 'phone', 'Phone incl. country code:', array('size' => 20, 'maxlength' => 20));
+      $this->addElement('text', 'handy', 'Mobile incl. country code:', array('size' => 20, 'maxlength' => 20));
+      $this->addElement('text', 'email', 'E-mail:', array('size' => 20, 'maxlength' => 40));
+	$s_arr = array(1 => 'single', 2 => 'engaged', 
+	3 => 'married', 4 => 'divorced', 5 => 'widowed');
+      $this->addElement('select', 'maritalstatus', 'Marital Status:', $s_arr);
 	unset($s_arr);
-      $this->addElement('select', 'gender', htmlentities(T_('Gender:')), array('0'=>htmlentities(T_('undefined')),
-	'f'=>htmlentities(T_('female')),'m'=>htmlentities(T_('male'))));
+      $this->addElement('select', 'gender', 'Gender:', array('0'=>'undefined','f'=>'female','m'=>'male'));
 
-      $this->addElement('header', null, htmlentities(T_('Passport details')));
-      $this->addElement('text', 'passportname', htmlentities(T_('Full name if different from above:')), array('size' => 40, 'maxlength' => 110));
+      $this->addElement('header', null, 'Passport details');
+      $this->addElement('text', 'passportname', 'Full name if different from above:', array('size' => 40, 'maxlength' => 110));
 
-      $this->addElement('date', 'dateofbirth', htmlentities(T_('Date of birth:')), array('language' => 'en', 'format' => 'dMY', 'minYear' => 1920, 'maxYear'=>2008));
-      $this->addElement('text', 'passportno', htmlentities(T_('Passport No.:')), array('size' => 40, 'maxlength' => 55));
-      $this->addElement('date', 'dateofissue', htmlentities(T_('Passport date of issue:')), array('language' => 'en', 'format' => 'dMY', 'minYear' => 1990, 'maxYear'=>2008));
-      $this->addElement('date', 'dateofexpire', htmlentities(T_('Passport date of expire:')), array('language' => 'en', 'format' => 'dMY', 'minYear' => 2007, 'maxYear'=>2029));
+      $this->addElement('date', 'dateofbirth', 'Date of birth:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 1920, 'maxYear'=>2008));
+      $this->addElement('text', 'passportno', 'Passport No.:', array('size' => 40, 'maxlength' => 55));
+      $this->addElement('date', 'dateofissue', 'Passport date of issue:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 1990, 'maxYear'=>2008));
+      $this->addElement('date', 'dateofexpire', 'Passport date of expire:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 2007, 'maxYear'=>2029));
 
-      $this->addElement('select', 'nationality', htmlentities(T_('Nationality:')), $c_arr);
+      $this->addElement('select', 'nationality', 'Nationality:', $c_arr);
 	unset($s_arr);
-      $this->addElement('select', 'invitationletter', htmlentities(T_('Do you need a letter of invitation for Germany?')), 
-	array('0'=>htmlentities(T_('No')),'1'=>htmlentities(T_('Yes'))));
+      $this->addElement('select', 'invitationletter', 'Do you need a letter of invitation for Germany?', 
+	array('0'=>'No','1'=>'Yes'));
 
-      $this->addElement('header', null, htmlentities(T_('Emergency Contact')));
-      $this->addElement('static','emergency_hint',htmlentities(T_('Emergency Information')),
-	htmlentities(T_('In case of an emergency case we need the address of a contact person')));
-      $this->addElement('text', 'emergency_firstname', htmlentities(T_('Firstname:')), array('size' => 40, 'maxlength' => 55));
-      $this->addElement('text', 'emergency_lastname', htmlentities(T_('Lastname:')), array('size' => 40, 'maxlength' => 55));
-      $this->addElement('text', 'emergency_phone', htmlentities(T_('Phone incl. country code:')), array('size' => 30, 'maxlength' => 45));
+      $this->addElement('header', null, 'Emergency Contact');
+      $this->addElement('static','emergency_hint','Emergency Information',
+	'In case of an emergency case we need the address of a contact person');
+      $this->addElement('text', 'emergency_firstname', 'Firstname:', array('size' => 40, 'maxlength' => 55));
+      $this->addElement('text', 'emergency_lastname', 'Lastname:', array('size' => 40, 'maxlength' => 55));
+      $this->addElement('text', 'emergency_phone', 'Phone incl. country code:', array('size' => 30, 'maxlength' => 45));
 
-      $this->addElement('submit', $this->getButtonName('next'), utf8_encode(T_('Proceed to next page'))); 
+      $this->addElement('submit', $this->getButtonName('next'), 'Proceed to next page'); 
 
       // Regel hinzufuegen 
       $this->registerRule('rule_nichtleer', 'callback', 'nichtleer');
-      $this->addRule(array('medication', 'what_medication'), htmlentities(T_('Please state what medication you require')),'rule_nichtleer');
-      $this->addRule(array('invitationletter', 'passportno'), htmlentities(T_('We need to have your passport details if you need a letter of invitation')),'rule_nichtleer');
-      $this->addRule('nationality', htmlentities(T_('Please enter your nationality')), 'required',null);
-      $this->addRule('nationality', htmlentities(T_('Please enter your nationality')), 'nonzero',null);
-      $this->addRule('firstname', htmlentities(T_('Please enter your firstname')), 'required',null);
-      $this->addRule('firstname', htmlentities(T_('Please enter letters only')), 'nopunctuation', null);
-      $this->addRule('lastname', htmlentities(T_('Please enter your lastname')), 'required',null);
-      $this->addRule('lastname', htmlentities(T_('Please enter letters only')), 'nopunctuation',null);
-      $this->addRule('street', htmlentities(T_('Please enter street')), 'required',null);
-      $this->addRule('email', htmlentities(T_('Please enter your e-mail')), 'required',null);
-      $this->addRule('email', htmlentities(T_('Please enter a valid e-mail address')), 'email',null);
-      $this->addRule('dateofbirth', htmlentities(T_('Please enter your birth date')), 'required',null);
-      $this->addGroupRule('plzort', htmlentities(T_('Please enter postcode and town')), 'required', 'server', 2);
+      $this->addRule(array('medication', 'what_medication'), 'Please state what medication you require','rule_nichtleer');
+      $this->addRule(array('invitationletter', 'passportno'), 'We need to have your passport details if you need a letter of invitation','rule_nichtleer');
+      $this->addRule('nationality', 'Please enter your nationality', 'required',null);
+      $this->addRule('nationality', 'Please enter your nationality', 'nonzero',null);
+      $this->addRule('firstname', 'Please enter your firstname', 'required',null);
+      $this->addRule('firstname', 'Please enter letters only', 'nopunctuation', null);
+      $this->addRule('lastname', 'Please enter your lastname', 'required',null);
+      $this->addRule('lastname', 'Please enter letters only', 'nopunctuation',null);
+      $this->addRule('street', 'Please enter street', 'required',null);
+      $this->addRule('email', 'Please enter your e-mail', 'required',null);
+      $this->addRule('email', 'Please enter a valid e-mail address', 'email',null);
+      $this->addRule('dateofbirth', 'Please enter your birth date', 'required',null);
+      $this->addGroupRule('plzort', 'Please enter postcode and town', 'required', 'server', 2);
       $this->addGroupRule('plzort', array('postcode' => array(        // Rules for the postcode
-        array(htmlentities(T_('Please enter a postcode')),'required')
+        array('Please enter a postcode','required')
         ),
         'city' => array( //Rules for the town
-        array(htmlentities(T_('Please enter town')),'required'),
-        array(htmlentities(T_('The name of the town is too short')),'minlength',2),
-        // array(htmlentities(T_('The town contains invalid characters')),'nopunctuation',null),
+        array('Please enter town','required'),
+        array('The name of the town is too short','minlength',2),
         )
      ));
-      $this->addRule('phone', htmlentities(T_('Please enter your phone number')), 'required',null);
-      $this->addRule('gender', htmlentities(T_('Please choose your gender')), 'required',null);
-      $this->addRule('gender', htmlentities(T_('Please choose your gender')), 'lettersonly');
-      $this->addRule('country', htmlentities(T_('Please choose your country of residence')), 'required');
-      $this->addRule('country', htmlentities(T_('Please choose your country of residence')), 'nonzero');
-      $this->addRule('emergency_firstname', htmlentities(T_('Please enter firstname')), 'required',null);
-      $this->addRule('emergency_lastname', htmlentities(T_('Please enter lastname')), 'required',null);
-      $this->addRule('emergency_phone', htmlentities(T_('Please enter emergency phone number')), 'required',null);
+      $this->addRule('phone', 'Please enter your phone number', 'required',null);
+      $this->addRule('gender', 'Please choose your gender', 'required',null);
+      $this->addRule('gender', 'Please choose your gender', 'lettersonly');
+      $this->addRule('country', 'Please choose your country of residence', 'required');
+      $this->addRule('country', 'Please choose your country of residence', 'nonzero');
+      $this->addRule('emergency_firstname', 'Please enter firstname', 'required',null);
+      $this->addRule('emergency_lastname', 'Please enter lastname', 'required',null);
+      $this->addRule('emergency_phone', 'Please enter emergency phone number', 'required',null);
 
       $this->applyFilter('__ALL__','trim');
 
@@ -174,10 +172,10 @@ class Form_Motivation extends HTML_QuickForm_Page
       $this->_formBuilt = true; 
       $mdb2 =& MDB2::singleton();
 
-      $this->addElement('header', null, htmlentities(T_('Registration Mission-net 2009 - page 2 of 3')));
+      $this->addElement('header', null, 'Registration Mission-net 2009 - page 2 of 3');
 
-      $this->addElement('header', null, htmlentities(T_('Other personal data')));
-      $this->addElement('textarea','other_conf', htmlentities(T_('Other mission conferences attended? Which ones?')),array('wrap'=>'soft','rows'=>'3','cols'=>'40'));
+      $this->addElement('header', null, 'Other personal data');
+      $this->addElement('textarea','other_conf', 'Other mission conferences attended? Which ones?',array('wrap'=>'soft','rows'=>'3','cols'=>'40'));
 
       $work_sql = 'SELECT id, name FROM languages ORDER by id';
       $erg =& $mdb2->query($work_sql);
@@ -189,33 +187,33 @@ class Form_Motivation extends HTML_QuickForm_Page
         }
 
 	$erg->Free();
-      $this->addElement('select', 'mother_tongue', htmlentities(T_('Please select your mother tongue:')), $s_arr);
+      $this->addElement('select', 'mother_tongue', 'Please select your mother tongue:', $s_arr);
       unset($s_arr);
-      $s_arr = array('0' => htmlentities(T_('brilliant')), '1'=>htmlentities(T_('fluent')),
-      	'2'=>htmlentities(T_('basic')),'3'=>htmlentities(T_('non-existing')));
-      $this->addElement('select', 'german_skill', htmlentities(T_('My german skills:')), $s_arr);
+      $s_arr = array('0' => 'brilliant', '1'=>'fluent',
+      	'2'=>'basic','3'=>'non-existing');
+      $this->addElement('select', 'german_skill', 'My german skills:', $s_arr);
       $this->addElement('select', 'english_skill', htmlentities(T_('My english skills:')), $s_arr);
       $this->addElement('static','dietary_hint',htmlentities(T_('Dietary Information')),
         htmlentities(T_('Wholefood and vegeterian food will be provided, but we can not provide any other diet!')));
 
-      $this->addElement('header', null, htmlentities(T_('Organisation details')));
-      $this->addElement('text', 'exhib_name', htmlentities(T_('Name of Organisation:')), array('size' => 40, 'maxlength' => 55));
-      $this->addElement('text', 'exhib_code', htmlentities(T_('Organisation ID Code:')), array('size' => 7, 'maxlength' => 20));
+      $this->addElement('header', null, 'Organisation details');
+      $this->addElement('text', 'exhib_name', 'Name of Organisation:', array('size' => 40, 'maxlength' => 55));
+      $this->addElement('text', 'exhib_code', 'Organisation ID Code:', array('size' => 7, 'maxlength' => 20));
       $this->addElement('select', 'exhib_pay', 'Does your organisation pay one bill for all delegates?',
         array('0'=>'No, we pay individually','1'=>'Yes, one bill only'));
 
-      $this->addElement('header', null, htmlentities(T_('Accommodation')));
+      $this->addElement('header', null, 'Accommodation');
       $this->addElement('select', 'exhib_acco', 'Will you stay in an accommodation off-site(self-organized)?',
         array('0'=>'No, we stay onsite','1'=>'Yes, we stay offsite'));
 
 
       //Buttons hinzufuegen 
-      $navi[] = $this->createElement('submit', $this->getButtonName('back'), utf8_encode(T_('Back to previous page'))); 
-      $navi[] = $this->createElement('submit', $this->getButtonName('next'), utf8_encode(T_('Proceed to next page'))); 
+      $navi[] = $this->createElement('submit', $this->getButtonName('back'), 'Back to previous page'); 
+      $navi[] = $this->createElement('submit', $this->getButtonName('next'), 'Proceed to next page'); 
       $this->addGroup($navi, null, '', '&nbsp;'); 
 
-      $this->addRule('exhib_name', htmlentities(T_('Please enter a name for your Organisation')), 'required');
-      $this->addRule('exhib_code', htmlentities(T_('Please enter the Organisation ID Code')), 'required');
+      $this->addRule('exhib_name', 'Please enter a name for your Organisation', 'required');
+      $this->addRule('exhib_code', 'Please enter the Organisation ID Code', 'required');
       $this->applyFilter('__ALL__','trim');
       $this->setDefaultAction('next'); 
    } 
@@ -231,7 +229,7 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
       $renderer = $page->defaultRenderer(); 
  
     // RequiredNote setzen; hier koennen auch Templates zugewiesen werden 
-	$rq_note = '<span style="color:F00">*</span> ' . htmlentities(T_('Denotes a required field'));
+	$rq_note = '<span style="color:F00">*</span> ' . 'Denotes a required field';
     $page->setRequiredNote($rq_note); 
       // Renderer-Objekt an ActionDisplay uebergeben 
       $page->accept($renderer);
@@ -239,7 +237,7 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
   	<html>
   	<head>
     	  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">";
-      echo "<title>" . htmlentities(T_("Mission-net Online Registration 2009")) . "</title>";
+      echo "<title>" . "Mission-net Online Registration 2009" . "</title>";
       global $fee_arr;
       global $cost_hint;
       reset($fee_arr);
@@ -289,32 +287,33 @@ class Form_Bankdaten extends HTML_QuickForm_Page
    {
       $this->_formBuilt = true;
       $mdb2 =& MDB2::singleton();
-      $this->addElement('header', null, htmlentities(T_('Registration Mission-net 2009 - page 3 of 3')));
+      $this->addElement('header', null, 'Registration Mission-net 2009 - page 3 of 3');
 
-      $this->addElement('static','couns_hint',htmlentities(T_('Information')),
-        htmlentities(T_('We will review your application, but can not guarantee cooperation! We will let you know until 2009.')));
+      $this->addElement('static','couns_hint','Information',
+        'We will review your application, but can not guarantee cooperation! We will let you know until 2009.');
 
-      $this->addElement('header', null, htmlentities(T_('Hints and Conditions')));
-      $this->addElement('static','dietary_hint',htmlentities(T_('Dietary Information')), 
-        htmlentities(T_('Wholefood and vegeterian food will be provided, but we can not provide any other diet!')));
+      $this->addElement('header', null, 'Hints and Conditions');
+      $this->addElement('static','dietary_hint','Dietary Information', 
+        'Wholefood and vegeterian food will be provided, but we can not provide any other diet!');
 
       $agb_html='<iframe src="./' . T_('agb_en.html') . '" width="100%" height="250" name="agb_in_a_box">';
-      $agb_html.= "<p>" . htmlentities(T_("Your browser cannot display embedded frames:"));
-      $agb_html.= " " . htmlentities(T_("You may view the Terms and Conditions via this Link:"));
-      $agb_html.= '<a href="./' . T_('agb_en.html') . '">' . htmlentities(T_('Terms and Conditions')) . '</a></p></iframe>';
-      $this->addElement('static','text', htmlentities(T_('Terms and Conditions')), $agb_html);
-      $this->addElement('advcheckbox', 'agb', htmlentities(T_('Agreement:')), htmlentities(T_('I agree to the Terms and Conditions above unconditionally')), null, array('No', 'Yes'));
-      $this->addRule('agb', htmlentities(T_('Your agreement to the terms and conditions is inevitable')),'regex','/^Yes$/');
-      $pay_text = htmlentities(T_('There two ways of paying for Mission-Net 2009:')) . "<br><ul><li>";
-      $pay_text.= htmlentities(T_('Wire transfer of money to our bank account')) . "</li><li>" . htmlentities(T_('Credit card payment'));
-      $pay_text.= "</li></ul>" . htmlentities(T_('If you prefer to pay by credit or debit card, we have to add a supplement of 8.50 Euro for the transaction.'));
-      $this->addElement('static', 'pay_hint', htmlentities(T_('Payment Instructions')), $pay_text);
-      $this->addElement('static', 'pay_hint2', htmlentities(T_('Note')), htmlentities(T_('Your registration is only valid as soon as we received your payment.')));
-      $this->addElement('static', 'pay_hint2', '', htmlentities(T_('You have to pay within 2 weeks of completing your registration, otherwise the system will delete your registration automatically.')));
+      $agb_html.= "<p>" . "Your browser cannot display embedded frames:";
+      $agb_html.= " " . "You may view the Terms and Conditions via this Link:";
+      $agb_html.= '<a href="./' . T_('agb_en.html') . '">Terms and Conditions</a></p></iframe>';
+      $this->addElement('static','text', 'Terms and Conditions', $agb_html);
+      $this->addElement('advcheckbox', 'agb', 'Agreement:', 'I agree to the Terms and Conditions above unconditionally', null, array('No', 'Yes'));
+      $this->addRule('agb', 'Your agreement to the terms and conditions is inevitable','regex','/^Yes$/');
+      $pay_text = 'There two ways of paying for Mission-Net 2009:' . "<br><ul><li>";
+      $pay_text.= 'Wire transfer of money to our bank account' . "</li><li>" . 'Credit card payment';
+      $pay_text.= "</li></ul>" . htmlentities(T_('If you prefer to pay by credit or debit card, we have to add a supplement of 10 Euro for the transaction.'));
+      $this->addElement('static', 'pay_hint', 'Payment Instructions', $pay_text);
+      $this->addElement('static', 'pay_hint2', 'Note', 'Your registration is only valid as soon as we received your payment.');
+      $this->addElement('static', 'pay_hint2', '', htmlentities(T_('If you are making an individual payment, please pay within 2 weeks of completing your registration.')));
+	$this->addElement('static', 'pay_hint3', '', htmlentities(T_("If you are making a group payment, an invoice will be issued to your organisation as soon as all the exhibitors from your organisation have registered.")));
 
       // add the buttons
-      $navi[] = $this->createElement('submit', $this->getButtonName('back'), utf8_encode(T_('Back to previous page')));
-      $navi[] = $this->createElement('submit', $this->getButtonName('next'), utf8_encode(T_('submit registration')));
+      $navi[] = $this->createElement('submit', $this->getButtonName('back'), 'Back to previous page');
+      $navi[] = $this->createElement('submit', $this->getButtonName('next'), 'submit registration');
       $this->addGroup($navi, null, '', '&nbsp;');
       $this->applyFilter('__ALL__','trim');
       $this->setDefaultAction('next');
@@ -592,9 +591,9 @@ class ActionProcess extends HTML_QuickForm_Action
 	echo T_("Address of bank:") . "Swiss Post / PostFinance / CH-3030 Bern" . "<br>\n";
 	echo htmlentities(T_("and use this reference:")) . "<b> M09-" . $last_id . "</b><br>\n";
 	echo "<br><b>" . htmlentities(T_("Credit Card Payment:")) . "</b><br>\n"; 
-	echo htmlentities(T_("If you prefer to pay by credit or debit card, we have to add a supplement of 8.50 Euro for the transaction.")) . "<br>\n";
-	$gsumme = $preis + 8.5;
-	echo htmlentities(T_("Please transfer the sum of")) . " " . $preis . " Euro + " . T_("8.50 Euro"). 
+	echo htmlentities(T_("If you prefer to pay by credit or debit card, we have to add a supplement of 10 Euro for the transaction.")) . "<br>\n";
+	$gsumme = $preis + 10;
+	echo htmlentities(T_("Please transfer the sum of")) . " " . $preis . " Euro + " . T_("10 Euro"). 
 	" = " . money_format('%i', $gsumme) . " " . htmlentities(T_("Euro")) . "<br>\n";
 	echo htmlentities(T_("by clicking this link:"));
 ?>
@@ -613,8 +612,9 @@ class ActionProcess extends HTML_QuickForm_Action
 <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_paynow_LG.gif">
 </form>
 <?php
-	echo htmlentities(T_("Note:")) . " " . htmlentities(T_("Your registration is only valid as soon as we received your payment.")) . "<br>\n";
-	echo htmlentities(T_("You have to pay within 2 weeks of completing your registration (this is now), otherwise the system will delete your registration automatically")) . "<br>\n";
+	echo htmlentities(T_("Note:")) . " " . htmlentities(T_("Note: Your registration is only valid as soon as we received your payment.")) . "<br>\n";
+	echo htmlentities(T_("If you are making an individual payment, please pay within 2 weeks of completing your registration.")) . "<br>\n";
+	echo htmlentities(T_("If you are making a group payment, an invoice will be issued to your organisation as soon as all the exhibitors from your organisation have registered.")) . "<br>\n";
 	session_destroy();
          } 
 	} 
