@@ -45,6 +45,8 @@ function nichtleer($felder)
    $work_sql = 'SELECT id, name, iso_code, fee, service_team_fee FROM countries ORDER by name';
    $c_arr = array();
    $fee_arr = array();
+   $nation_arr = array();
+   $nation_arr[0] = 'undefined';
    $country = substr(strtoupper($_SESSION["resi"]), -2, 2);
    $erg =& $mdb2->query($work_sql);
    if (PEAR::isError($erg)) {
@@ -52,6 +54,7 @@ function nichtleer($felder)
    }
    while (($row = $erg->fetchRow())) {
          $c_arr[$row[0]] = $row[1];
+	 $nation_arr[$row[0]] = $row[1];
          $fee_arr[$row[2]] = array($row[3], $row[4], $row[0]);
    }
    $erg->free();
@@ -68,6 +71,7 @@ class Form_Personal extends HTML_QuickForm_Page
 
       global $c_arr;
       global $fee_arr;
+      global $nation_arr;
       global $cost_hint;
       global $country;
 	
@@ -106,12 +110,12 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->addElement('header', null, 'Passport details');
       $this->addElement('text', 'passportname', 'Full name if different from above:', array('size' => 40, 'maxlength' => 110));
 
-      $this->addElement('date', 'dateofbirth', 'Date of birth:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 1920, 'maxYear'=>2008));
+      $this->addElement('date', 'dateofbirth', 'Date of birth:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 1920, 'maxYear'=>2008, 'addEmptyOption'=>true));
       $this->addElement('text', 'passportno', 'Passport No.:', array('size' => 40, 'maxlength' => 55));
       $this->addElement('date', 'dateofissue', 'Passport date of issue:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 1990, 'maxYear'=>2008));
       $this->addElement('date', 'dateofexpire', 'Passport date of expire:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 2007, 'maxYear'=>2029));
 
-      $this->addElement('select', 'nationality', 'Nationality:', $c_arr);
+      $this->addElement('select', 'nationality', 'Nationality:', $nation_arr);
 	unset($s_arr);
       $this->addElement('select', 'invitationletter', 'Do you need a letter of invitation for Germany?', 
 	array('0'=>'No','1'=>'Yes'));
@@ -138,7 +142,7 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->addRule('street', 'Please enter street', 'required',null);
       $this->addRule('email', 'Please enter your e-mail', 'required',null);
       $this->addRule('email', 'Please enter a valid e-mail address', 'email',null);
-      $this->addRule('dateofbirth', 'Please enter your birth date', 'required',null);
+      $this->addGroupRule('dateofbirth', 'Please enter your birth date', 'required');
       $this->addGroupRule('plzort', 'Please enter postcode and town', 'required', 'server', 2);
       $this->addGroupRule('plzort', array('postcode' => array(        // Rules for the postcode
         array('Please enter a postcode','required')
@@ -192,15 +196,15 @@ class Form_Motivation extends HTML_QuickForm_Page
       $s_arr = array('0' => 'brilliant', '1'=>'fluent',
       	'2'=>'basic','3'=>'non-existing');
       $this->addElement('select', 'german_skill', 'My german skills:', $s_arr);
-      $this->addElement('select', 'english_skill', htmlentities(T_('My english skills:')), $s_arr);
-      $this->addElement('static','dietary_hint',htmlentities(T_('Dietary Information')),
-        htmlentities(T_('Wholefood and vegeterian food will be provided, but we can not provide any other diet!')));
+      $this->addElement('select', 'english_skill', 'My english skills:', $s_arr);
+      $this->addElement('static','dietary_hint','Dietary Information',
+        'Wholefood and vegeterian food will be provided, but we can not provide any other diet!');
 
       $this->addElement('header', null, 'Organisation details');
       $this->addElement('text', 'exhib_name', 'Name of Organisation:', array('size' => 40, 'maxlength' => 55));
       $this->addElement('text', 'exhib_code', 'Organisation ID Code:', array('size' => 7, 'maxlength' => 20));
       $this->addElement('select', 'exhib_pay', 'Does your organisation pay one bill for all delegates?',
-        array('0'=>'No, we pay individually','1'=>'Yes, one bill only'));
+        array('x'=>'Please select','0'=>'No, we pay individually','1'=>'Yes, one bill only'));
 
       $this->addElement('header', null, 'Accommodation');
       $this->addElement('select', 'exhib_acco', 'Will you stay in an accommodation off-site(self-organized)?',
@@ -214,6 +218,8 @@ class Form_Motivation extends HTML_QuickForm_Page
 
       $this->addRule('exhib_name', 'Please enter a name for your Organisation', 'required');
       $this->addRule('exhib_code', 'Please enter the Organisation ID Code', 'required');
+      $this->addRule('exhib_pay', 'Please choose how you want to pay', 'required');
+      $this->addRule('exhib_pay', 'Please choose how you want to pay', 'numeric');
       $this->applyFilter('__ALL__','trim');
       $this->setDefaultAction('next'); 
    } 
@@ -305,11 +311,11 @@ class Form_Bankdaten extends HTML_QuickForm_Page
       $this->addRule('agb', 'Your agreement to the terms and conditions is inevitable','regex','/^Yes$/');
       $pay_text = 'There two ways of paying for Mission-Net 2009:' . "<br><ul><li>";
       $pay_text.= 'Wire transfer of money to our bank account' . "</li><li>" . 'Credit card payment';
-      $pay_text.= "</li></ul>" . htmlentities(T_('If you prefer to pay by credit or debit card, we have to add a supplement of 10 Euro for the transaction.'));
+      $pay_text.= "</li></ul>" . 'If you prefer to pay by credit or debit card, we have to add a supplement of 10 Euro for the transaction.';
       $this->addElement('static', 'pay_hint', 'Payment Instructions', $pay_text);
       $this->addElement('static', 'pay_hint2', 'Note', 'Your registration is only valid as soon as we received your payment.');
-      $this->addElement('static', 'pay_hint2', '', htmlentities(T_('If you are making an individual payment, please pay within 2 weeks of completing your registration.')));
-	$this->addElement('static', 'pay_hint3', '', htmlentities(T_("If you are making a group payment, an invoice will be issued to your organisation as soon as all the exhibitors from your organisation have registered.")));
+      $this->addElement('static', 'pay_hint2', '', 'If you are making an individual payment, please pay within 2 weeks of completing your online registration.');
+	$this->addElement('static', 'pay_hint3', '', "If you are making a group payment, an invoice will be issued to your organisation as soon as all the exhibitors from your organisation have registered.");
 
       // add the buttons
       $navi[] = $this->createElement('submit', $this->getButtonName('back'), 'Back to previous page');
