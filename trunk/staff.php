@@ -104,7 +104,7 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->addElement('header', null, 'Passport details');
       $this->addElement('text', 'passportname', 'Full name if different from above:', array('size' => 40, 'maxlength' => 110));
 
-      $this->addElement('date', 'dateofbirth', 'Date of birth:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 1920, 'maxYear'=>2008));
+      $this->addElement('date', 'dateofbirth', 'Date of birth:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 1920, 'maxYear'=>2008, 'addEmptyOption'=>true));
       $this->addElement('text', 'passportno', 'Passport No.:', array('size' => 40, 'maxlength' => 55));
       $this->addElement('date', 'dateofissue', 'Passport date of issue:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 1990, 'maxYear'=>2008));
       $this->addElement('date', 'dateofexpire', 'Passport date of expire:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 2007, 'maxYear'=>2029));
@@ -136,7 +136,7 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->addRule('street', 'Please enter street', 'required',null);
       $this->addRule('email', 'Please enter your e-mail', 'required',null);
       $this->addRule('email', 'Please enter a valid e-mail address', 'email',null);
-      $this->addRule('dateofbirth', 'Please enter your birth date', 'required',null);
+      $this->addGroupRule('dateofbirth', 'Please enter your birth date', 'required');
       $this->addGroupRule('plzort', 'Please enter postcode and town', 'required', 'server', 2);
       $this->addGroupRule('plzort', array('postcode' => array(        // Rules for the postcode
         array('Please enter a postcode','required')
@@ -266,7 +266,7 @@ class Form_Bankdaten extends HTML_QuickForm_Page
         'Wholefood and vegeterian food will be provided, but we can not provide any other diet!');
 
       $agb_html='<iframe src="./' . T_('agb_en.html') . '" width="100%" height="250" name="agb_in_a_box">';
-      $agb_html.= "<p>" . htmlentities(T_("Your browser cannot display embedded frames:"));
+      $agb_html.= "<p>Your browser cannot display embedded frames:";
       $agb_html.= " " . "You may view the Terms and Conditions via this Link:";
       $agb_html.= '<a href="./' . T_('agb_en.html') . '">' . 'Terms and Conditions</a></p></iframe>';
       $this->addElement('static','text', 'Terms and Conditions', $agb_html);
@@ -274,10 +274,10 @@ class Form_Bankdaten extends HTML_QuickForm_Page
       $this->addRule('agb', 'Your agreement to the terms and conditions is inevitable','regex','/^Yes$/');
       $pay_text = 'There two ways of paying for Mission-Net 2009:' . "<br><ul><li>";
       $pay_text.= 'Wire transfer of money to our bank account' . "</li><li>" . 'Credit card payment';
-      $pay_text.= "</li></ul>" . htmlentities(T_('If you prefer to pay by credit or debit card, we have to add a supplement of 8.50 Euro for the transaction.'));
+      $pay_text.= "</li></ul>" . 'If you prefer to pay by credit or debit card, we have to add a supplement of 10 Euro for the transaction.';
       $this->addElement('static', 'pay_hint', 'Payment Instructions', $pay_text);
       $this->addElement('static', 'pay_hint2', 'Note', 'Your registration is only valid as soon as we received your payment.');
-      $this->addElement('static', 'pay_hint2', '', htmlentities(T_('You have to pay within 2 weeks of completing your registration, otherwise the system will delete your registration automatically.')));
+      $this->addElement('static', 'pay_hint2', '', 'You have to pay within 2 weeks of completing your registration, otherwise the system will delete your registration automatically.');
 
       // add the buttons
       $navi[] = $this->createElement('submit', $this->getButtonName('back'), 'Back to previous page');
@@ -385,7 +385,7 @@ class ActionProcess extends HTML_QuickForm_Action
       $text = T_("Dear") . " " . $values["firstname"] . "\n\n";
       $text.= T_("we are so excited that you have just registered for Mission-net in Oldenburg, 2009. We are looking forward to meeting you and 6000 others from all over Europe.");
       $text.= "\n \n";
-      $text.= htmlentities(T_("You are in for a great time with great worship, speakers, and of course the chance to meet like minded people from all over Europe."));
+      $text.= "You are in for a great time with great worship, speakers, and of course the chance to meet like minded people from all over Europe.";
       $text.= "\n \n";
       $text.= htmlentities(T_("We have a National Coordinator in your country who this message has also been sent to. Nearer the time they will be in contact with you to give you more information on others from your country that will be attending this exciting event, as well as practical details of things like travel and what you need to bring."));
       $text.= "\n \n";
@@ -397,18 +397,18 @@ class ActionProcess extends HTML_QuickForm_Action
       $text.= T_("You may download this PDF file right here:") . " ";
       $text.= "https://register.mission-net.org/" . $pdffile;
       $text.= "\n \n";
-      $text.= htmlentities(T_("Thanks again for registering for Mission-Net, and we trust that this event will be an exciting new step in your journey in the Christian faith."));
+      $text.= "Thanks again for registering for Mission-Net, and we trust that this event will be an exciting new step in your journey in the Christian faith.";
       $text.= "\n \n \n";
-      $text.= htmlentities(T_("Many Blessings"));
+      $text.= "Many Blessings";
       $text.= "\n \n";
-      $text.= htmlentities(T_("Mission-Net Congress Management Team"));
+      $text.= "Mission-Net Congress Management Team";
       $text.= "\n \n";
-      $text.= htmlentities(T_("Mission-Net 2009 -- Alte Neckarelzer Str. 2 -- D-74821 Mosbach"));
+      $text.= "Mission-Net 2009 -- Alte Neckarelzer Str. 2 -- D-74821 Mosbach";
       $text.= "\n";
       $text.= $infomailaddress;
 
 
-      $html = htmlentities(T_("Dear")) . " " . $values["firstname"] . "<br><br>\n";
+      $html = "Dear " . $values["firstname"] . "<br><br>\n";
       $html.= htmlentities(T_("we are so excited that you have just registered for Mission-net in Oldenburg, 2009. We are looking forward to meeting you and 6000 others from all over Europe."));
       $html.= "\n<br><br>\n";
       $html.= htmlentities(T_("You are in for a great time with great worship, speakers, and of course the chance to meet like minded people from all over Europe."));
@@ -417,19 +417,19 @@ class ActionProcess extends HTML_QuickForm_Action
       $html.= "\n<br><br>\n";
       $html.= htmlentities(T_("In order for your registration to be processed please ensure that the congress fee is sent to the Bank (see details attached if not paid by credit card) and you send us the signed registration form. On receipt of payment, we will send you another confirmation e-mail that the money has received which will also be sent to the National Coordinator in your country."));
       $html.= "\n<br><br>\n";
-      $html.= htmlentities(T_("Please ensure that this happens so that we can process your registration as quickly as possible."));
+      $html.= "Please ensure that this happens so that we can process your registration as quickly as possible.";
       $html.= "\n<br><br>\n";
-      $html.= htmlentities(T_("Please find attached all necessary documents again in the PDF format.")) . "<br>";
-      $html.= htmlentities(T_("You may download this PDF file right here:")) . " ";
-      $html.= "<a href='https://register.mission-net.org/" . $pdffile . "'>" . htmlentities(T_("PDF Document")) . "</a>";
+      $html.= "Please find attached all necessary documents again in the PDF format.<br>";
+      $html.= "You may download this PDF file right here:" . " ";
+      $html.= "<a href='https://register.mission-net.org/" . $pdffile . "'>PDF Document</a>";
       $html.= "\n<br><br>\n";
       $html.= htmlentities(T_("Thanks again for registering for Mission-Net, and we trust that this event will be an exciting new step in your journey in the Christian faith"));
       $html.= "\n<br><br><br>\n";
-      $html.= htmlentities(T_("Many Blessings"));
+      $html.= "Many Blessings";
       $html.= "\n<br><br>\n";
-      $html.= htmlentities(T_("Mission-Net Congress Management Team"));
+      $html.= "Mission-Net Congress Management Team";
       $html.= "\n<br><br>\n";
-      $html.= htmlentities(T_("Mission-Net 2009 -- Alte Neckarelzer Str. 2 -- D-74821 Mosbach"));
+      $html.= "Mission-Net 2009 -- Alte Neckarelzer Str. 2 -- D-74821 Mosbach";
       $html.= "\n<br>";
       $html.= $infomailaddress;
 
@@ -545,9 +545,9 @@ class ActionProcess extends HTML_QuickForm_Action
 	echo T_("Address of bank:") . "Swiss Post / PostFinance / CH-3030 Bern" . "<br>\n";
 	echo htmlentities(T_("and use this reference:")) . "<b> M09-" . $last_id . "</b><br>\n";
 	echo "<br><b>" . htmlentities(T_("Credit Card Payment:")) . "</b><br>\n"; 
-	echo htmlentities(T_("If you prefer to pay by credit or debit card, we have to add a supplement of 8.50 Euro for the transaction.")) . "<br>\n";
-	$gsumme = $preis + 8.5;
-	echo htmlentities(T_("Please transfer the sum of")) . " " . $preis . " Euro + " . T_("8.50 Euro"). 
+	echo htmlentities(T_("If you prefer to pay by credit or debit card, we have to add a supplement of 10 Euro for the transaction.")) . "<br>\n";
+	$gsumme = $preis + 10;
+	echo htmlentities(T_("Please transfer the sum of")) . " " . $preis . " Euro + " . T_("10 Euro"). 
 	" = " . money_format('%i', $gsumme) . " " . htmlentities(T_("Euro")) . "<br>\n";
 	echo htmlentities(T_("by clicking this link:"));
 ?>
