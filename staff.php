@@ -111,7 +111,14 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->addElement('date', 'dateofissue', 'Passport date of issue:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 1990, 'maxYear'=>2008));
       $this->addElement('date', 'dateofexpire', 'Passport date of expire:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 2007, 'maxYear'=>2029));
 
-      $this->addElement('select', 'nationality', 'Nationality:', $c_arr);
+      $nationgroup[]=HTML_QuickForm::createElement('select', 'nationality', 'Nationality:', $c_arr,
+         "title='" . 'Please choose your nationality' . "' onChange='NationGang(this.value);'" );
+      $nationgroup[0]->setSelected(0);
+      $nationgroup[]=HTML_QuickForm::createElement('text','othernation','Nationality:',array('size' => 30, 'maxlength' => 40),
+         "title='" . 'Please enter here your nationality if you cannot find it in the list');
+      $this->addGroup($nationgroup,'nationgroup', 'Nationality:');
+
+//      $this->addElement('select', 'nationality', 'Nationality:', $c_arr);
 	unset($s_arr);
       $this->addElement('select', 'invitationletter', 'Do you need a letter of invitation for Germany?', 
 	array('0'=>'No','1'=>'Yes'));
@@ -129,8 +136,8 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->registerRule('rule_nichtleer', 'callback', 'nichtleer');
       $this->addRule(array('medication', 'what_medication'), 'Please state what medication you require','rule_nichtleer');
       $this->addRule(array('invitationletter', 'passportno'), 'We need to have your passport details if you need a letter of invitation','rule_nichtleer');
-      $this->addRule('nationality', 'Please enter your nationality', 'required',null);
-      $this->addRule('nationality', 'Please enter your nationality', 'nonzero',null);
+      $this->addGroupRule('nationgroup', 'Please enter your nationality', 'required');
+      //$this->addRule('nationality', 'Please enter your nationality', 'nonzero',null);
       $this->addRule('firstname', 'Please enter your firstname', 'required',null);
       $this->addRule('firstname', 'Please enter letters only', 'nopunctuation', null);
       $this->addRule('lastname', 'Please enter your lastname', 'required',null);
@@ -138,6 +145,7 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->addRule('street', 'Please enter street', 'required',null);
       $this->addRule('email', 'Please enter your e-mail', 'required',null);
       $this->addRule('email', 'Please enter a valid e-mail address', 'email',null);
+      $this->addGroupRule('countrygroup', 'Please enter your country', 'required');
       $this->addGroupRule('dateofbirth', 'Please enter your birth date', 'required');
       $this->addGroupRule('plzort', 'Please enter postcode and town', 'required', 'server', 2);
       $this->addGroupRule('plzort', array('postcode' => array(        // Rules for the postcode
@@ -247,6 +255,17 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
           }
 	  function Ausgrauen(){
 	     document.seite1.elements[4].disabled = true;
+	     document.seite1.elements[29].disabled = true;
+	  }
+	  function NationGang(nationwert) {
+	     if (nationwert == 99) {
+	        alert(\"Please enter your nationality here!\");
+	        document.seite1.elements[29].disabled = false;
+	        document.seite1.elements[29].focus();
+	     } else {
+	        document.seite1.elements[29].disabled = true;
+	        document.seite1.elements[29].value = \"\";
+	     }
 	  }
 
 	</script>
@@ -340,7 +359,7 @@ class ActionProcess extends HTML_QuickForm_Action
       $sql1 = 'INSERT INTO participants SET firstname = ?, lastname = ?, preferred_name = ?, title = ?, street = ?,
 		postcode = ?, city = ?, country = ?, countrytext = ?, phone = ?, mobile = ?, email = ?, dateofbirth = ?, maritalstatus = ?, gender = ?,
 		passport_name = ?, passport_no = ?, passport_dateofissue = ?, passport_dateofexpire = ?,
-		nationality = ?, invitation_letter = ?, emergency_firstname = ?, emergency_lastname = ?, emergency_phone = ?,
+		nationality = ?, nationalitytext = ?, invitation_letter = ?, emergency_firstname = ?, emergency_lastname = ?, emergency_phone = ?,
 		special_job = ?, sj_reason = ?, part_type = ?, status = ?';
       $sth = $mdb2->prepare($sql1, $typen, MDB2_PREPARE_RESULT);
 
@@ -357,7 +376,8 @@ class ActionProcess extends HTML_QuickForm_Action
 
        $daten[] = korr_datum($values['dateofissue']);
        $daten[] = korr_datum($values['dateofexpire']);
-       $daten[] = $values['nationality'];
+       $daten[] = $values['nationgroup']['nationality'];
+       $daten[] = $values['nationgroup']['othernation'];
        $daten[] = $page->controller->exportValue('seite1','invitationletter');
 
        $daten[] = utf8_decode($values['emergency_firstname']);
