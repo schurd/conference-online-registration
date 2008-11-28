@@ -82,9 +82,13 @@ class Form_Personal extends HTML_QuickForm_Page
         "title='" . 'This registration page is for exhibitors only');
       $this->setDefaults(array('parttype' => $_SESSION["part_type"]));
 
-      $this->addElement('select', 'country', 'Country:', $c_arr, 
-	"title='" . 'Please choose your country of residence' . 
-	"' onChange='Gang(document.seite1.country.value);'" );
+      $landgroup[]=HTML_QuickForm::createElement('select', 'country', 'Country of residence:', $c_arr,
+        "title='" . 'Please choose your country of residence' . "' onChange='Gang(this.value);'" );
+      $landgroup[0]->setSelected($fee_arr[$country][2]);
+      $landgroup[]=HTML_QuickForm::createElement('text','othercountry','Country:',array('size' => 30, 'maxlength' => 40),
+        "title='" . 'Please enter here your country if you cannot find it in the list');
+      $this->addGroup($landgroup,'countrygroup', 'Country:');
+
       $this->setDefaults(array('country' => $fee_arr[$country][2]));
 
       $this->addElement('static', 'price_hint', 'Price for congress', $cost_hint2);
@@ -155,8 +159,8 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->addRule('phone', 'Please enter your phone number', 'required',null);
       $this->addRule('gender', 'Please choose your gender', 'required',null);
       $this->addRule('gender', 'Please choose your gender', 'lettersonly');
-      $this->addRule('country', 'Please choose your country of residence', 'required');
-      $this->addRule('country', 'Please choose your country of residence', 'nonzero');
+      //$this->addRule('country', 'Please choose your country of residence', 'required');
+      //$this->addRule('country', 'Please choose your country of residence', 'nonzero');
       $this->addRule('emergency_firstname', 'Please enter firstname', 'required',null);
       $this->addRule('emergency_lastname', 'Please enter lastname', 'required',null);
       $this->addRule('emergency_phone', 'Please enter emergency phone number', 'required',null);
@@ -259,7 +263,7 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
 	   echo "preise[$val[2]][1] = $val[1];\n";
       }
       echo "  function Gang(wert) {
-	 land = document.seite1.country.value;
+	 land = wert;
 	 typ = 0;
 	 var epreis = preise[land][typ] + \" Euro\";
 	 var cost_hint2 = cost_hint.replace(/\\d+ Euro/g, epreis);
@@ -268,10 +272,22 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
 	 } else {
 	    document.getElementById(\"preis\").innerHTML = cost_hint2
 	 }
+	 if (land == 99) {
+	    alert(\"Please enter your country of residence here!\");
+	    document.forms[0].elements[3].disabled = false;
+	    document.forms[0].elements[3].focus();
+	 } else {
+	    document.forms[0].elements[3].disabled = true;
+	    document.forms[0].elements[3].value = \"\";
+	 }
 	}
+	function Ausgrauen(){
+	   document.seite1.elements[3].disabled = true;
+	}
+
 	</script>
   	</head>
-  	<body><div class=\"main\"><div class=\"site\">
+  	<body onload=\"Ausgrauen();\"><div class=\"main\"><div class=\"site\">
   	<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">
 	<tbody><tr>
   	 <td class=\"white-cell\">
@@ -362,7 +378,7 @@ class ActionProcess extends HTML_QuickForm_Action
       }
 
       $sql1 = 'INSERT INTO participants SET firstname = ?, lastname = ?, preferred_name = ?, title = ?, street = ?,
-		postcode = ?, city = ?, country = ?, phone = ?, mobile = ?, email = ?, dateofbirth = ?, maritalstatus = ?, gender = ?,
+		postcode = ?, city = ?, country = ?, countrytext = ?, phone = ?, mobile = ?, email = ?, dateofbirth = ?, maritalstatus = ?, gender = ?,
 		passport_name = ?, passport_no = ?, passport_dateofissue = ?, passport_dateofexpire = ?,
 		nationality = ?, invitation_letter = ?, emergency_firstname = ?, emergency_lastname = ?, emergency_phone = ?,
 		other_conf= ?, german_skill = ?, english_skill = ?,
@@ -376,7 +392,7 @@ class ActionProcess extends HTML_QuickForm_Action
       $daten = array(utf8_decode($values['firstname']),utf8_decode($values['lastname']),
 	utf8_decode($values['preferredname']),utf8_decode($values['title']),
 	utf8_decode($values['street']),$values['plzort']['postcode'], utf8_decode($values['plzort']['city']), 
-	$values['country'], $values['phone'], $values['handy'], $values['email'], 
+	$values['countrygroup']['country'], $values['countrygroup']['othercountry'], $values['phone'], $values['handy'], $values['email'], 
 	korr_datum($values['dateofbirth']), $values['maritalstatus'], 
 	$values['gender'], utf8_decode($values['passportname']), utf8_decode($values['passportno']));
 

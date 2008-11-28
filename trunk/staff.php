@@ -76,10 +76,12 @@ class Form_Personal extends HTML_QuickForm_Page
 	'15'=>'Programme', '16'=>'Others:'));
       $this->addElement('text', 'staff_text', "Details for your job/area:", array('size' => 55, 'maxlength' => 70, 'title'=>'Please give details about your job at Mission-Net'));
 
-      $this->addElement('select', 'country', 'Country of residence:', $c_arr, 
-	"title='" . 'Please choose your country of residence' . 
-	"' onChange='Gang(document.seite1.country.value);'" );
-      $this->setDefaults(array('country' => $fee_arr[$country][2]));
+      $landgroup[]=HTML_QuickForm::createElement('select', 'country', 'Country of residence:', $c_arr,
+        "title='" . 'Please choose your country of residence' . "' onChange='Gang(this.value);'" );
+      $landgroup[0]->setSelected($fee_arr[$country][2]);
+      $landgroup[]=HTML_QuickForm::createElement('text','othercountry','Country:',array('size' => 30, 'maxlength' => 40),
+        "title='" . 'Please enter here your country if you cannot find it in the list');
+      $this->addGroup($landgroup,'countrygroup', 'Country:');
 
       $this->addElement('static', 'price_hint', 'Price for congress', $cost_hint2);
       $this->addElement('header', null, 'Personal data');
@@ -225,7 +227,7 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
 	    echo "preise[$val[2]][1] = $val[1];\n";
 	}
       echo "  function Gang(wert) {
-		land = document.seite1.country.value;
+		land = wert;
 		typ = 0;
 		var epreis = preise[land][typ] + \" Euro\";
 		var cost_hint2 = cost_hint.replace(/\\d+ Euro/g, epreis);
@@ -234,10 +236,22 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
 	        } else {
 		document.getElementById(\"preis\").innerHTML = cost_hint2
 		}
+		if (land == 99) {
+		   alert(\"Please enter your country of residence here!\");
+		   document.forms[0].elements[4].disabled = false;
+		   document.forms[0].elements[4].focus();
+		} else {
+		   document.forms[0].elements[4].disabled = true;
+		   document.forms[0].elements[4].value = \"\";
+		}
           }
+	  function Ausgrauen(){
+	     document.seite1.elements[4].disabled = true;
+	  }
+
 	</script>
   	</head>
-  	<body><div class=\"main\"><div class=\"site\">
+  	<body onload=\"Ausgrauen();\"><div class=\"main\"><div class=\"site\">
   	<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">
 	<tbody><tr>
   	 <td class=\"white-cell\">
@@ -324,7 +338,7 @@ class ActionProcess extends HTML_QuickForm_Action
       }
 
       $sql1 = 'INSERT INTO participants SET firstname = ?, lastname = ?, preferred_name = ?, title = ?, street = ?,
-		postcode = ?, city = ?, country = ?, phone = ?, mobile = ?, email = ?, dateofbirth = ?, maritalstatus = ?, gender = ?,
+		postcode = ?, city = ?, country = ?, countrytext = ?, phone = ?, mobile = ?, email = ?, dateofbirth = ?, maritalstatus = ?, gender = ?,
 		passport_name = ?, passport_no = ?, passport_dateofissue = ?, passport_dateofexpire = ?,
 		nationality = ?, invitation_letter = ?, emergency_firstname = ?, emergency_lastname = ?, emergency_phone = ?,
 		special_job = ?, sj_reason = ?, part_type = ?, status = ?';
@@ -337,7 +351,7 @@ class ActionProcess extends HTML_QuickForm_Action
       $daten = array(utf8_decode($values['firstname']),utf8_decode($values['lastname']),
 	utf8_decode($values['preferredname']),utf8_decode($values['title']),
 	utf8_decode($values['street']),$values['plzort']['postcode'], utf8_decode($values['plzort']['city']), 
-	$values['country'], $values['phone'], $values['handy'], $values['email'], 
+	$values['countrygroup']['country'], $values['countrygroup']['countrytext'], $values['phone'], $values['handy'], $values['email'], 
 	korr_datum($values['dateofbirth']), $values['maritalstatus'], 
 	$values['gender'], utf8_decode($values['passportname']), utf8_decode($values['passportno']));
 
