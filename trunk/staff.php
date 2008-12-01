@@ -133,10 +133,10 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->addElement('submit', $this->getButtonName('next'), 'Proceed to next page'); 
 
       // Regel hinzufuegen 
-      $this->registerRule('rule_nichtleer', 'callback', 'nichtleer');
+      //$this->registerRule('rule_nichtleer', 'callback', 'nichtleer');
       $this->addRule(array('medication', 'what_medication'), 'Please state what medication you require','rule_nichtleer');
       $this->addRule(array('invitationletter', 'passportno'), 'We need to have your passport details if you need a letter of invitation','rule_nichtleer');
-      $this->addGroupRule('nationgroup', 'Please enter your nationality', 'required');
+      //$this->addGroupRule('nationgroup', 'Please enter your nationality', 'required');
       //$this->addRule('nationality', 'Please enter your nationality', 'nonzero',null);
       $this->addRule('firstname', 'Please enter your firstname', 'required',null);
       $this->addRule('firstname', 'Please enter letters only', 'nopunctuation', null);
@@ -145,7 +145,7 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->addRule('street', 'Please enter street', 'required',null);
       $this->addRule('email', 'Please enter your e-mail', 'required',null);
       $this->addRule('email', 'Please enter a valid e-mail address', 'email',null);
-      $this->addGroupRule('countrygroup', 'Please enter your country', 'required');
+      //$this->addGroupRule('countrygroup', 'Please enter your country', 'required');
       $this->addGroupRule('dateofbirth', 'Please enter your birth date', 'required');
       $this->addGroupRule('plzort', 'Please enter postcode and town', 'required', 'server', 2);
       $this->addGroupRule('plzort', array('postcode' => array(        // Rules for the postcode
@@ -159,8 +159,8 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->addRule('phone', 'Please enter your phone number', 'required',null);
       $this->addRule('gender', 'Please choose your gender', 'required',null);
       $this->addRule('gender', 'Please choose your gender', 'lettersonly');
-      $this->addRule('country', 'Please choose your country of residence', 'required');
-      $this->addRule('country', 'Please choose your country of residence', 'nonzero');
+      //$this->addRule('country', 'Please choose your country of residence', 'required');
+      //$this->addRule('country', 'Please choose your country of residence', 'nonzero');
       $this->addRule('emergency_firstname', 'Please enter firstname', 'required',null);
       $this->addRule('emergency_lastname', 'Please enter lastname', 'required',null);
       $this->addRule('emergency_phone', 'Please enter emergency phone number', 'required',null);
@@ -254,8 +254,6 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
 		}
           }
 	  function Ausgrauen(){
-	     document.seite1.elements[4].disabled = true;
-	     document.seite1.elements[29].disabled = true;
 	  }
 	  function NationGang(nationwert) {
 	     if (nationwert == 99) {
@@ -357,12 +355,12 @@ class ActionProcess extends HTML_QuickForm_Action
       }
 
       $sql1 = 'INSERT INTO participants SET firstname = ?, lastname = ?, preferred_name = ?, title = ?, street = ?,
-		postcode = ?, city = ?, country = ?, countrytext = ?, phone = ?, mobile = ?, email = ?, dateofbirth = ?, maritalstatus = ?, gender = ?,
-		passport_name = ?, passport_no = ?, passport_dateofissue = ?, passport_dateofexpire = ?,
-		nationality = ?, nationalitytext = ?, invitation_letter = ?, emergency_firstname = ?, emergency_lastname = ?, emergency_phone = ?,
-		special_job = ?, sj_reason = ?, part_type = ?, status = ?';
+		postcode = ?, city = ?, country = ?, countrytext = ?, phone = ?, mobile = ?, email = ?, dateofbirth = ?, 
+		maritalstatus = ?, gender = ?, passport_name = ?, passport_no = ?, passport_dateofissue = ?, 
+		passport_dateofexpire = ?, nationality = ?, nationalitytext = ?, invitation_letter = ?, 
+		emergency_firstname = ?, emergency_lastname = ?, emergency_phone = ?, sj_reason = ?, 
+		part_type = ?, status = ?';
       $sth = $mdb2->prepare($sql1, $typen, MDB2_PREPARE_RESULT);
-
       if (PEAR::isError($mdb2)) {
         die("Error while preparing : " . $mdb2->getMessage());
       }
@@ -370,25 +368,24 @@ class ActionProcess extends HTML_QuickForm_Action
       $daten = array(utf8_decode($values['firstname']),utf8_decode($values['lastname']),
 	utf8_decode($values['preferredname']),utf8_decode($values['title']),
 	utf8_decode($values['street']),$values['plzort']['postcode'], utf8_decode($values['plzort']['city']), 
-	$values['countrygroup']['country'], $values['countrygroup']['countrytext'], $values['phone'], $values['handy'], $values['email'], 
+	$values['countrygroup']['country'], $values['countrygroup']['othercountry'], $values['phone'], $values['handy'], $values['email'], 
 	korr_datum($values['dateofbirth']), $values['maritalstatus'], 
 	$values['gender'], utf8_decode($values['passportname']), utf8_decode($values['passportno']));
 
        $daten[] = korr_datum($values['dateofissue']);
        $daten[] = korr_datum($values['dateofexpire']);
        $daten[] = $values['nationgroup']['nationality'];
-       $daten[] = $values['nationgroup']['othernation'];
+       $daten[] = utf8_decode($values['nationgroup']['othernation']);
        $daten[] = $page->controller->exportValue('seite1','invitationletter');
 
        $daten[] = utf8_decode($values['emergency_firstname']);
        $daten[] = utf8_decode($values['emergency_lastname']);
        $daten[] = $values['emergency_phone'];
 
-       $daten[] = $values['parttype'];
        $daten[] = utf8_decode($values['staff_text']);
-       $daten[] = '5';
+       $daten[] = $values['parttype'];
+       //$daten[] = '5';
        $daten[] = '1';	// status field
-
       $affRow=$sth->execute($daten);
       if (PEAR::isError($affRow)) {
         die("Error while executing : " . $affRow->getMessage());
@@ -400,7 +397,7 @@ class ActionProcess extends HTML_QuickForm_Action
          //  echo ($mdb2->getMessage().' - '.$mdb2->getUserinfo());
       }
       $sth->Free();
-      $sql1 = "SELECT fee, name FROM countries WHERE id=" . $values['country'];
+      $sql1 = "SELECT fee, name FROM countries WHERE id=" . $values['countrygroup']['country'];
       $erg =& $mdb2->query($sql1);
         if (PEAR::isError($erg)) {
            die ($erg->getMessage());
