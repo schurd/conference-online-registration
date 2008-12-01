@@ -143,7 +143,7 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->registerRule('rule_nichtleer', 'callback', 'nichtleer');
       $this->addRule(array('medication', 'what_medication'), 'Please state what medication you require','rule_nichtleer');
       $this->addRule(array('invitationletter', 'passportno'), 'We need to have your passport details if you need a letter of invitation','rule_nichtleer');
-      $this->addGroupRule('nationality', 'Please enter your nationality', 'required');
+      //$this->addGroupRule('nationality', 'Please enter your nationality', 'required');
       //$this->addRule('nationality', 'Please enter your nationality', 'nonzero',null);
       $this->addRule('firstname', 'Please enter your firstname', 'required',null);
       $this->addRule('firstname', 'Please enter letters only', 'nopunctuation', null);
@@ -152,7 +152,7 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->addRule('street', 'Please enter street', 'required',null);
       $this->addRule('email', 'Please enter your e-mail', 'required',null);
       $this->addRule('email', 'Please enter a valid e-mail address', 'email',null);
-      $this->addGroupRule('countrygroup', 'Please enter your country', 'required');
+      //$this->addGroupRule('countrygroup', 'Please enter your country', 'required');
       $this->addGroupRule('dateofbirth', 'Please enter your birth date', 'required');
       $this->addGroupRule('plzort', 'Please enter postcode and town', 'required', 'server', 2);
       $this->addGroupRule('plzort', array('postcode' => array(        // Rules for the postcode
@@ -446,7 +446,7 @@ class ActionProcess extends HTML_QuickForm_Action
          //  echo ($mdb2->getMessage().' - '.$mdb2->getUserinfo());
       }
       $sth->Free();
-      $sql1 = "SELECT fee, name FROM countries WHERE id=" . $values['country'];
+      $sql1 = "SELECT fee, name FROM countries WHERE id=" . $values['countrygroup']['country'];
       $erg =& $mdb2->query($sql1);
         if (PEAR::isError($erg)) {
            die ($erg->getMessage());
@@ -462,11 +462,6 @@ class ActionProcess extends HTML_QuickForm_Action
       // now let's create a PDF file
       create_pdf($values, $last_id, $pdffile, $preis, $land_name);
 
-      $options = array ( 'host'  => '10.27.1.200',
-              'auth'      => false,
-              'username'  => 'user',
-              'password'  => 'geheim'
-      );
       $text = T_("Dear") . " " . $values["firstname"] . "\n\n";
       $text.= T_("we are so excited that you have just registered for Mission-net in Oldenburg, 2009. We are looking forward to meeting you and 6000 others from all over Europe.");
       $text.= "\n \n";
