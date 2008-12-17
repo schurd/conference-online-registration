@@ -74,6 +74,7 @@ function countrytest($value)
      $cost_hint = htmlentities(T_('Cost for accomodation, food and program (without travel): ')) . '<b>' . $fee_arr[$country][0] . ' Euro</b>';
   }
   $parthint_arr = array(
+    '0'=>htmlentities(T_('Please choose your role at Mission-Net')),
     '1'=>htmlentities(T_('As a Participant you can simply enjoy the congress and participate in whatever activities you would wish in the Programme')),
     '2'=>htmlentities(T_('As a member of the service team you have the opportunity to serve God and the participants at the Congress. You can work in a number of different areas, e.g. Kitche, mission-nwet shop, InfoDesk, etc.')),
     '3'=>htmlentities(T_('As a group leader you will lead a group of approx. 10 people from your country. The Family Groups will meet each morning after the main session.'))
@@ -94,9 +95,9 @@ class Form_Personal extends HTML_QuickForm_Page
       global $fee_arr;
       global $country;
       global $cost_hint;
-      $part_arr = array('1'=>htmlentities(T_('Participant')), '2'=>htmlentities(T_('Workforce in the Service Team')),
-              '3'=>htmlentities(T_('Family Group Leader')), '4'=>htmlentities(T_('Staff')));
-
+      $part_arr = array('0'=>htmlentities(T_('undefined')),'1'=>htmlentities(T_('Participant')), 
+              '2'=>htmlentities(T_('Workforce in the Service Team')),
+              '3'=>htmlentities(T_('Family Group Leader')), '5'=>htmlentities(T_('Staff')));
       global $parthint_arr; 
 
       $this->addElement('header', null, htmlentities(T_('Registration Mission-net 2009 - page 1 of 4')));
@@ -105,7 +106,7 @@ class Form_Personal extends HTML_QuickForm_Page
         $part_arr, "title='" . htmlentities(T_('You must be at least 18 years of age to serve in the Service Team')) .
         "' onChange='Gang(document.forms[0].elements[2].value, this.value);'" );
       $this->setDefaults(array('parttype' => $_SESSION["part_type"]));
-      $this->addElement('static', 'parttype_hint', htmlentities(T_('Participanton Type Definition')), "<SPAN ID='parthint'>" . $parthint_arr[$_SESSION["part_type"]]. "</SPAN>");
+      $this->addElement('static', 'parttype_hint', htmlentities(T_('Participant Type Definition')), "<SPAN ID='parthint'>" . $parthint_arr[$_SESSION["part_type"]]. "</SPAN>");
 
       $landgroup[]=HTML_QuickForm::createElement('select', 'country', 'Country of residence:', $c_arr,
 	"title='" . htmlentities(T_('Please choose your country of residence')) . 
@@ -117,8 +118,8 @@ class Form_Personal extends HTML_QuickForm_Page
 
       $this->addElement('static', 'price_hint', htmlentities(T_('Price for congress')), $cost_hint2);
       $this->addElement('header', null, htmlentities(T_('Personal data')));
-      $this->addElement('text', 'lastname', htmlentities(T_("Lastname:")), array('size' => 40, 'maxlength' => 55));
       $this->addElement('text', 'firstname', htmlentities(T_('Firstname:')), array('size' => 40, 'maxlength' => 55));
+      $this->addElement('text', 'lastname', htmlentities(T_("Lastname:")), array('size' => 40, 'maxlength' => 55));
       $this->addElement('text', 'preferredname', htmlentities(T_('Preferred name:')), array('size' => 40, 'maxlength' => 55));
       $this->addElement('text', 'title', htmlentities(T_('Title:')), array('size' => 40, 'maxlength' => 55));
       $this->addElement('text', 'street', htmlentities(T_('Street:')), array('size' => 40, 'maxlength' => 55));
@@ -145,7 +146,14 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->addElement('date', 'dateofissue', htmlentities(T_('Passport date of issue:')), array('language' => 'en', 'format' => 'dMY', 'minYear' => 1990, 'maxYear'=>2008));
       $this->addElement('date', 'dateofexpire', htmlentities(T_('Passport date of expire:')), array('language' => 'en', 'format' => 'dMY', 'minYear' => 2007, 'maxYear'=>2029));
 
-      $this->addElement('select', 'nationality', htmlentities(T_('Nationality:')), $nation_arr);
+      $nationgroup[]=HTML_QuickForm::createElement('select', 'nationality', 'Nationality:', $nation_arr,
+         "title='" . htmlentities(T_('Please choose your nationality')) .
+	 "' onChange='NationGang(this.value);'" );
+      $nationgroup[0]->setSelected(0);
+      $nationgroup[]=HTML_QuickForm::createElement('text','othernation','Nationality:',array('size' => 30, 'maxlength' => 40),
+         "title='" . htmlentities(T_('Please enter here your nationality if you cannot find it in the list')));
+      $this->addGroup($nationgroup,'nationgroup', htmlentities(T_('Nationality:')));
+
       $this->addElement('select', 'invitationletter', htmlentities(T_('Do you need a letter of invitation for Germany?')), 
 	array('0'=>htmlentities(T_('No')),'1'=>htmlentities(T_('Yes'))));
 
@@ -162,8 +170,8 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->registerRule('rule_nichtleer', 'callback', 'nichtleer');
       $this->addRule(array('medication', 'what_medication'), htmlentities(T_('Please state what medication you require')),'rule_nichtleer');
       $this->addRule(array('invitationletter', 'passportno'), htmlentities(T_('We need to have your passport details if you need a letter of invitation')),'rule_nichtleer');
-      $this->addRule('nationality', htmlentities(T_('Please enter your nationality')), 'required',null);
-      $this->addRule('nationality', htmlentities(T_('Please enter your nationality')), 'nonzero',null);
+      $this->addRule('parttype', htmlentities(T_('Please choose your role')), 'required');
+      $this->addRule('parttype', htmlentities(T_('Please choose your role')), 'nonzero');
       $this->addRule('firstname', htmlentities(T_('Please enter your firstname')), 'required',null);
       $this->addRule('firstname', htmlentities(T_('Please enter letters only')), 'nopunctuation', null);
       $this->addRule('lastname', htmlentities(T_('Please enter your lastname')), 'required',null);
@@ -373,7 +381,7 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
 	}
 
 	echo "  function Gang(landwert, typwert) {
-		if (typwert == 4) {
+		if (typwert == 5) {
 		   var ziel = \"https://register.mission-net.org/staff.php\";
 		   window.location.href = ziel;
 		}
@@ -390,21 +398,65 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
 		}
 		if (landwert == 99) {
 		  alert(\"Please enter your country of residence here!\");
-		  document.forms[0].elements[3].focus();
 		  document.forms[0].elements[3].disabled = false;
+		  document.forms[0].elements[3].focus();
 		} else {
 		  document.forms[0].elements[3].disabled = true;
+		  document.forms[0].elements[3].value = \"\";
 		}
           }
+	  function Ausgrauen(){
+	    document.seite1.elements[3].disabled = true;
+	    document.seite1.elements[28].disabled = true;
+	  }
+	  function NationGang(nationwert) {
+	    if (nationwert == 99) {
+	      alert(\"Please enter your nationality here!\");
+	      document.seite1.elements[28].disabled = false;
+	      document.seite1.elements[28].focus();
+	    } else {
+	      document.seite1.elements[28].disabled = true;
+	      document.seite1.elements[28].value = \"\";
+	    }
+	  }
+	  function WechsleSprach(sprach) {
+	    Erg = document.URL.match(/locale=\\w+/i);
+	    if (Erg) {
+	      var NeuURL = document.URL.replace(/locale=\\w+/gi, \"locale=\" + sprach);
+	    } else {
+	      erg2 = document.URL.match(/php$/i);
+	      if (erg2) {
+	        var NeuURL = document.URL + \"?locale=\" + sprach;
+	      } else {
+	        var NeuURL = document.URL + \"&locale=\" + sprach;
+	      }
+	    }
+	    window.location.href = NeuURL;
+	  }
 	</script>
   	</head>
-  	<body><div class=\"main\"><div class=\"site\">
+  	<body onload=\"Ausgrauen();\"><div class=\"main\"><div class=\"site\">
   	<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">
 	<tbody><tr>
   	 <td class=\"white-cell\">
    	 <img src=\"images/MN_Logo_kleiner.png\" alt=\"Mission-net Logo\" width=\"160\" height=\"90\">
    	 </td><td class=\"title-cell\">Mission-Net<br>8. - 13. April 2009<br>Oldenburg<br>Germany
   	 </td>
+	 <td class=\"white-cell\" align=\"right\" valign=\"top\" padding=4>
+	   <img src=\"images/de.png\" hspace=4 vspace=4 alt=\"Deutsch\" title=Deutsch onClick=\"WechsleSprach('de');\"></td>
+	 <td class=\"white-cell\" align=\"right\" valign=\"top\" padding=4>
+	   <img src=\"images/it.png\" hspace=4 vspace=4 alt=\"'Italian\" title=Italian onClick=\"WechsleSprach('it');\"></td>
+	 <td class=\"white-cell\" align=\"right\" valign=\"top\">
+	   <img src=\"images/fr.png\" hspace=4 vspace=4 alt=\"French\" title=French onClick=\"WechsleSprach('fr');\"></td>
+	 <td class=\"white-cell\" align=\"right\" valign=\"top\">
+	   <img src=\"images/fi.png\" hspace=4 vspace=4 alt=\"Finnish\" title=Finnish onClick=\"WechsleSprach('fi');\"></td>
+	 <td class=\"white-cell\" align=\"right\" valign=\"top\">
+	   <img src=\"images/gb.png\" hspace=4 vspace=4 alt=\"English\" title=English onClick=\"WechsleSprach('en');\"></td>
+	 <td class=\"white-cell\" align=\"right\" valign=\"top\">
+	   <img src=\"images/no.png\" hspace=4 vspace=4 alt=\"Norwegian\" title=Norwegian onClick=\"WechsleSprach('no');\"></td>
+	 <td class=\"white-cell\" align=\"right\" valign=\"top\">
+	   <img src=\"images/nl.png\" hspace=4 vspace=4 alt=\"Dutch\" title=Dutch onClick=\"WechsleSprach('nl');\"></td>
+
   	 </tr></tbody>
   	</table>"; 
       echo $renderer->toHtml(); 
@@ -442,7 +494,7 @@ class Form_Bankdaten extends HTML_QuickForm_Page
       unset($s_arr);
 
       $this->addElement('static','arrival_hint',htmlentities(T_('Arrival & Departure')),
-              htmlentities(T_('We will need your help during setup days and teardown days. If possible, we ask to plan your arrival at Saturday, 4th of April and your departure at Tuesday, 14th of April! If you have a question contact us at serviceteam@mission-net.org')));
+              htmlentities(T_('We really need your help during setup days and tear-down days. If possible, we ask to schedule your arrival at Saturday, 4th of April and your departure at Tuesday, 14th of April! If you have any questions, please contact us at serviceteam@mission-net.org')));
 
       $arr_array = array(
       	'2009-04-04'=>'04. April',
@@ -457,10 +509,10 @@ class Form_Bankdaten extends HTML_QuickForm_Page
 
 
       $this->addElement('select', 'arr_date', htmlentities(T_('Estimated day of arrival (in April 2009):')), $arr_array);
-      //$this->setDefaults(array('arr_date' => '07.07.2009');
+      $this->setDefaults(array('arr_date' => '2009-04-08'));
 
       $this->addElement('select', 'dep_date', htmlentities(T_('Estimated day of departure (in April 2009):')), $dep_array);
-      //$this->setDefaults(array('dep_date' => array('Y' => 2008, 'm' => 4, 'd' => 14, 'H'=>12)));
+      $this->setDefaults(array('dep_date' => '2009-04-13'));
 
       $this->addElement('html', '<td style="background-color: #CCCCCC; color:red;" colspan="2"><b>' .
         htmlentities(T_('Additional questions for those joining Special Services')) . '</b></td>');
@@ -541,7 +593,7 @@ class ActionProcess extends HTML_QuickForm_Action
 		postcode = ?, city = ?, country = ?, countrytext = ?, phone = ?, mobile = ?, email = ?, 
 		dateofbirth = ?, maritalstatus = ?, gender = ?,
 		passport_name = ?, passport_no = ?, passport_dateofissue = ?, passport_dateofexpire = ?,
-		nationality = ?, invitation_letter = ?, vegeterian = ?, medication = ?, what_medication = ?, 
+		nationality = ?, nationalitytext = ?, invitation_letter = ?, vegeterian = ?, medication = ?, what_medication = ?, 
 		medication_reason = ?, disabilities = ?, allergies = ?, emergency_firstname = ?,
 		emergency_lastname = ?, emergency_phone = ?, groupleader_name = ?, groupleader_email = ?,
 		church_name = ?, church_deno = ?, church_address = ?, ref_person_church_task = ?, ref_person_lastname = ?, 
@@ -562,7 +614,8 @@ class ActionProcess extends HTML_QuickForm_Action
 
        $daten[] = korr_datum($values['dateofissue']);
        $daten[] = korr_datum($values['dateofexpire']);
-       $daten[] = $values['nationality'];
+       $daten[] = $values['nationgroup']['nationality'];
+       $daten[] = $values['nationgroup']['othernation'];
        $daten[] = $page->controller->exportValue('seite1','invitationletter');
        $daten[] = $page->controller->exportValue('seite3','vegetarian');
        $daten[] = $page->controller->exportValue('seite3','medication');
@@ -645,7 +698,7 @@ class ActionProcess extends HTML_QuickForm_Action
       $text.= "\n \n";
       $text.= htmlentities(T_("We have a National Coordinator in your country who this message has also been sent to. Nearer the time they will be in contact with you to give you more information on others from your country that will be attending this exciting event, as well as practical details of things like travel and what you need to bring."));
       $text.= "\n \n";
-      $text.= htmlentities(T_("In order for your registration to be processed please ensure that the congress fee is sent to the Bank (see details attached if not paid by credit card) and you send us the signed registration form. On receipt of payment, we will send you another confirmation e-mail that the money has received which will also be sent to the National Coordinator in your country."));
+      $text.= htmlentities(T_("In order for your registration to be processed please ensure that the congress fee is sent to the Bank (see details attached if not paid by credit card) and you send us the signed registration form, if you are under 18 years. On receipt of payment, we will send you another confirmation e-mail that the money has received which will also be sent to the National Coordinator in your country."));
       $text.= "\n \n";
       $text.= T_("Please ensure that this happens so that we can process your registration as quickly as possible.");
       $text.= "\n \n";
@@ -671,7 +724,7 @@ class ActionProcess extends HTML_QuickForm_Action
       $html.= "\n<br><br>\n";
       $html.= htmlentities(T_("We have a National Coordinator in your country who this message has also been sent to. Nearer the time they will be in contact with you to give you more information on others from your country that will be attending this exciting event, as well as practical details of things like travel and what you need to bring."));
       $html.= "\n<br><br>\n";
-      $html.= htmlentities(T_("In order for your registration to be processed please ensure that the congress fee is sent to the Bank (see details attached if not paid by credit card) and you send us the signed registration form. On receipt of payment, we will send you another confirmation e-mail that the money has received which will also be sent to the National Coordinator in your country."));
+      $html.= htmlentities(T_("In order for your registration to be processed please ensure that the congress fee is sent to the Bank (see details attached if not paid by credit card) and you send us the signed registration form, if you are under 18 years. On receipt of payment, we will send you another confirmation e-mail that the money has received which will also be sent to the National Coordinator in your country."));
       $html.= "\n<br><br>\n";
       $html.= htmlentities(T_("Please ensure that this happens so that we can process your registration as quickly as possible."));
       $html.= "\n<br><br>\n";
@@ -794,7 +847,7 @@ class ActionProcess extends HTML_QuickForm_Action
 	<?php 
 	echo htmlentities(T_("Confirmation of registration for Mission-Net 2009"));
 	echo '</h2>';
-	$format = htmlentities(T_("Dear")) . " %1\$s";
+	$format = htmlentities(T_("Hello")) . " %1\$s";
 	printf($format, $values["firstname"]);
 	echo ", <br><br>\n";
 	echo htmlentities(T_('we are so excited that you have just registered for Mission-net in Oldenburg, 2009. We are looking forward to meeting you and 6000 others from all over Europe.'));
@@ -803,7 +856,7 @@ class ActionProcess extends HTML_QuickForm_Action
 	echo "\n<br><br>\n";
 	echo htmlentities(T_("We have a National Coordinator in your country who this message has also been sent to. Nearer the time they will be in contact with you to give you more information on others from your country that will be attending this exciting event, as well as practical details of things like travel and what you need to bring."));
 	echo "\n<br><br><br>\n";
-	echo htmlentities(T_("In order for your registration to be processed please ensure that the congress fee is paid. On receipt of payment, we will send you another confirmation e-mail that the money has received which will also be sent to the National Coordinator in your country."));
+	echo htmlentities(T_("In order for your registration to be processed please ensure that the congress fee is paid. If you are under 18 years old, you are also required to send in the PDF form sent with the confirmation e-mail, signed by your parents and you. On receipt of payment, we will send you another confirmation e-mail that the money has received which will also be sent to the National Coordinator in your country."));
 	echo "\n<br><br>\n";
 	echo htmlentities(T_("Please ensure that this happens so that we can process your registration as quickly as possible."));
 	echo "\n<br><br>\n";
@@ -849,8 +902,8 @@ class ActionProcess extends HTML_QuickForm_Action
 </form>
 <?php
 //	echo "<a href='http://www.paypal.com?func=missionnet09'>http://www.paypal.com?func=missionnet09</a><br>";
-	echo htmlentities(T_("Note:")) . " " . htmlentities(T_("Your registration is only valid as soon as we received your payment.")) . "<br>\n";
-	echo htmlentities(T_("You have to pay within 2 weeks of completing your registration (this is now), otherwise the system will delete your registration automatically")) . "<br>\n";
+	echo htmlentities(T_("Note:")) . " " . htmlentities(T_("Your registration is only valid as soon as we received your payment and if you are under 18 years the signed PDF form.")) . "<br>\n";
+	echo htmlentities(T_("You have to pay within 2 weeks after completing your online registration (this is now), otherwise the system will delete your registration automatically")) . "<br>\n";
 	session_destroy();
          } 
 	} 

@@ -86,7 +86,7 @@ $pdf->SetTitle("Registration for Mission-Net 2009");
 	//Cell, Anmeldung gueltig
 	$pdf->SetY(50);
 	$pdf->SetFont('Arial','B',10);
-	$pdf->Cell(0,1, T_("Please print this page, sign it and send it to us."),0,0,'R');
+	$pdf->Cell(0,1, "Please print this page, sign it and send it to us, if you are under 18 years old.",0,0,'R');
 	
 //#################HEADER END############
 //#################Mission-Net ADDRESS#######
@@ -114,7 +114,7 @@ $pdf->SetTitle("Registration for Mission-Net 2009");
 	
 	$pdf->SetX(20);
 	$pdf->SetY(100);
-	$pdf->Write(5, "The registration is only valid after we received this page and the payment has been made.");
+	$pdf->Write(5, "The registration is only valid after we received this page (if you are 18 years) and the payment has been made.");
 	//Notfalladresse
 	$pdf->SetY(110);
 	$pdf->SetX(130);

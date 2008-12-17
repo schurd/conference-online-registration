@@ -86,7 +86,7 @@ $pdf->SetTitle("Registration for Mission-Net 2009");
 	//Cell, Anmeldung gueltig
 	$pdf->SetY(50);
 	$pdf->SetFont('Arial','B',10);
-	$pdf->Cell(0,1, T_("Please print this page, sign it and send it to us."),0,0,'R');
+	$pdf->Cell(0,1, T_("Please print this page, sign it and send it to us, if you are under 18 years."),0,0,'R');
 	
 //#################HEADER END############
 //#################Mission-Net ADDRESS#######
@@ -237,12 +237,12 @@ $pdf->SetTitle("Registration for Mission-Net 2009");
         $pdf->Write(5, T_("Credit Card Payment:"));
         $pdf->Ln();
         $pdf->SetFont('Arial','',12);
-        $pdf->Write(5, T_("If you prefer to pay by credit or debit card card, we have to add a supplement of 8,50 Euro for the transaction."));
+        $pdf->Write(5, T_("If you prefer to pay by credit or debit card card, we have to add a supplement of 10 Euro for the transaction."));
         $pdf->Ln();
         $pdf->Write(5, T_("Please transfer the sum of"));
 	$pdf->SetX(80);
-	$gesamt = 8.5 + $preis;
-        $pdf->Write(5, $preis . " Euro + " . T_("8,50 Euro") . " = " . money_format('%i', $gesamt) . " "  . T_("Euro"));
+	$gesamt = 10 + $preis;
+        $pdf->Write(5, $preis . " Euro + " . T_("10 Euro") . " = " . money_format('%i', $gesamt) . " "  . T_("Euro"));
         $pdf->Ln();
 	$plink = "https://register.mission-net.org/paypal.php?regi=" . $id;
         $pdf->Write(5, T_("by clicking this link:") . " " . $plink . " ", $plink);
