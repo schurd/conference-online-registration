@@ -28,7 +28,7 @@ require_once('registration.pdf/fpdf.php');
         // Dicke des Rahmens (1 mm)
         $this->SetLineWidth(0.7);
         // Titel
-        $this->Cell(175,10, T_("Registration for mission-net 2009"),1,1,'C',1);
+        $this->Cell(175,10, "Registration for mission-net 2009",1,1,'C',1);
         // Zeilenumbruch
         $this->Ln(10);
     }
@@ -61,7 +61,7 @@ $pdf->SetCreator("Mission-Net");
 $st_pdf_keywords= 'Reg.-No.: ' . $var_registrationnr;
 $pdf->SetKeywords($st_pdf_keywords);
 $pdf->SetSubject("Mission-Net Registration");
-$pdf->SetTitle("Registration for Mission-Net 2009");
+$pdf->SetTitle("Exhibitors Registration for Mission-Net 2009");
 
 //######################HEADER###########
 //---------------------------------------
@@ -114,7 +114,7 @@ $pdf->SetTitle("Registration for Mission-Net 2009");
 	
 	$pdf->SetX(20);
 	$pdf->SetY(100);
-	$pdf->Write(5, "The registration is only valid after we received this page (if you are 18 years) and the payment has been made.");
+	$pdf->Write(5, "The registration is only valid after we received this page (if you are under 18 years) and the payment has been made.");
 	//Notfalladresse
 	$pdf->SetY(110);
 	$pdf->SetX(130);
@@ -205,18 +205,18 @@ $pdf->SetTitle("Registration for Mission-Net 2009");
         $pdf->Write(5, "OM Europa / Mission-Net");
         $pdf->Ln();
         $pdf->SetX(100);
-        $pdf->Write(5, "Account no: 91-479018-6");
+        $pdf->Write(5, "Account no: 5010802");
         $pdf->Ln();
         $pdf->SetX(100);
         $pdf->Write(5, $iban);
         $pdf->Ln();
         $pdf->SetX(100);
-        $pdf->Write(5, "SWIFT CODE: POFICHBEXXX");
+        $pdf->Write(5, "SWIFT CODE: GENODEF1EK1");
         $pdf->Ln();
         $pdf->SetX(20);
         $pdf->Write(5, "Address of bank:");
         $pdf->SetX(100);
-        $pdf->Write(5, "Swiss Post / PostFinance / CH-3030 Bern");
+        $pdf->Write(5, "Ev. Kreditgenossenschaft / Seidlerstr. 6 / D-34117 Kassel");
         $pdf->Ln();
         $pdf->Write(5, "and use this reference:");
         $pdf->SetFont('Arial','B',12);
@@ -248,10 +248,11 @@ $pdf->SetTitle("Registration for Mission-Net 2009");
         $pdf->Write(5, "by clicking this link:" . " " . $plink . " ", $plink);
         $pdf->Ln();
         $pdf->Ln();
-        $pdf->Write(5, "Note: Your registration is only valid as soon as we received your payment.");
+        $pdf->Write(5, "Note: Your registration is only valid as soon as we received your payment and if you
+	are under 18 years old the signed PDF form.");
         $pdf->Ln();
         $pdf->Ln();
-        $pdf->Write(5, "You have to pay within 2 weeks after completing your online registration, otherwise the system will delete your registration automatically.");
+        $pdf->Write(5, "If you are making an individual payment, please pay within 2 weeks after completing your online registration. If you are making a group payment, an invoice will be issued to your organisation as soon as all the exhibitors from your organisation have registered. ");
 //################REGISTRATION END########
 
 //################OUTPUT###################
