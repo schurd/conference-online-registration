@@ -456,6 +456,8 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
 	   <img src=\"images/no.png\" hspace=4 vspace=4 alt=\"Norwegian\" title=Norwegian onClick=\"WechsleSprach('no');\"></td>
 	 <td class=\"white-cell\" align=\"right\" valign=\"top\">
 	   <img src=\"images/nl.png\" hspace=4 vspace=4 alt=\"Dutch\" title=Dutch onClick=\"WechsleSprach('nl');\"></td>
+	 <td class=\"white-cell\" align=\"right\" valign=\"top\">
+	   <img src=\"images/pt.png\" hspace=4 vspace=4 alt=\"Portugese\" title=Portugese onClick=\"WechsleSprach('pt');\"></td>
 
   	 </tr></tbody>
   	</table>"; 
@@ -873,11 +875,12 @@ class ActionProcess extends HTML_QuickForm_Action
 	echo "<b>" . htmlentities(T_("Wire transfer:")) . "</b><br>\n"; 
 	echo htmlentities(T_("Please transfer the sum of")) . " " . $preis . " " . T_("Euro"). "<br>\n";
 	echo htmlentities(T_("to")) . "<br>" . T_("OM Europa / Mission-Net") . "<br>\n";
-	echo htmlentities(T_("Account no:")) .  " 91-479018-6" . "<br>\n";
+	echo htmlentities(T_("Account no:")) .  " 5010802" . "<br>\n";
 	global $iban;
+	global $swiftcode;
 	echo $iban . "<br>\n";
-	echo T_("SWIFT CODE: POFICHBEXXX") . "<br>\n";
-	echo T_("Address of bank:") . "Swiss Post / PostFinance / CH-3030 Bern" . "<br>\n";
+	echo $swiftcode . "<br>\n";
+	echo T_("Address of bank:") . "Evangelische Kreditgenossenschaft / Seidlerstr. 6 / D-34117 Kassel" . "<br>\n";
 	echo htmlentities(T_("and use this reference:")) . "<b> M09-" . $last_id . "</b><br>\n";
 	echo "<br><b>" . htmlentities(T_("Credit Card Payment:")) . "</b><br>\n"; 
 	echo htmlentities(T_("If you prefer to pay by credit or debit card, we have to add a supplement of 10 Euro for the transaction.")) . "<br>\n";
