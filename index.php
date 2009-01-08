@@ -458,6 +458,8 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
 	   <img src=\"images/nl.png\" hspace=4 vspace=4 alt=\"Dutch\" title=Dutch onClick=\"WechsleSprach('nl');\"></td>
 	 <td class=\"white-cell\" align=\"right\" valign=\"top\">
 	   <img src=\"images/pt.png\" hspace=4 vspace=4 alt=\"Portugese\" title=Portugese onClick=\"WechsleSprach('pt');\"></td>
+         <td class=\"white-cell\" align=\"right\" valign=\"top\">
+	   <img src=\"images/es.png\" hspace=4 vspace=4 alt=\"Spanish\" title=Spanish onClick=\"WechsleSprach('es');\"></td>
 
   	 </tr></tbody>
   	</table>"; 
