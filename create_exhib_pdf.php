@@ -42,6 +42,7 @@ require_once('registration.pdf/fpdf.php');
     }  
   } 
   global $iban;
+  global $bank;
   global $swiftcode;
 ///*DEBUG
 //print_r($data);
@@ -217,7 +218,7 @@ $pdf->SetTitle("Exhibitors Registration for Mission-Net 2009");
         $pdf->SetX(20);
         $pdf->Write(5, "Address of bank:");
         $pdf->SetX(80);
-        $pdf->Write(5, "Ev. Kreditgenossenschaft / Seidlerstr. 6 / D-34117 Kassel");
+        $pdf->Write(5, $bank);
         $pdf->Ln();
         $pdf->Write(5, "and use this reference:");
         $pdf->SetFont('Arial','B',12);
