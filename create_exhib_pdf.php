@@ -42,6 +42,7 @@ require_once('registration.pdf/fpdf.php');
     }  
   } 
   global $iban;
+  global $swiftcode;
 ///*DEBUG
 //print_r($data);
 $var_prename = $data["firstname"];
@@ -197,30 +198,30 @@ $pdf->SetTitle("Exhibitors Registration for Mission-Net 2009");
         $pdf->Ln();
         $pdf->SetFont('Arial','',12);
         $pdf->Write(5, "Please transfer the sum of");
-        $pdf->SetX(100);
+        $pdf->SetX(80);
         $pdf->Write(5, $preis . " " . "Euro");
         $pdf->Ln();
         $pdf->Write(5, "to");
-        $pdf->SetX(100);
+        $pdf->SetX(80);
         $pdf->Write(5, "OM Europa / Mission-Net");
         $pdf->Ln();
-        $pdf->SetX(100);
+        $pdf->SetX(80);
         $pdf->Write(5, "Account no: 5010802");
         $pdf->Ln();
-        $pdf->SetX(100);
+        $pdf->SetX(80);
         $pdf->Write(5, $iban);
         $pdf->Ln();
-        $pdf->SetX(100);
-        $pdf->Write(5, "SWIFT CODE: GENODEF1EK1");
+        $pdf->SetX(80);
+        $pdf->Write(5, "SWIFT CODE: " . $swiftcode );
         $pdf->Ln();
         $pdf->SetX(20);
         $pdf->Write(5, "Address of bank:");
-        $pdf->SetX(100);
+        $pdf->SetX(80);
         $pdf->Write(5, "Ev. Kreditgenossenschaft / Seidlerstr. 6 / D-34117 Kassel");
         $pdf->Ln();
         $pdf->Write(5, "and use this reference:");
         $pdf->SetFont('Arial','B',12);
-        $pdf->SetX(100);
+        $pdf->SetX(80);
         $pdf->Write(5, "M09-" . $id);
         $pdf->Ln();
 	if ( $data["country"] == 3 ) {
