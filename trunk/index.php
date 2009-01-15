@@ -779,22 +779,21 @@ class ActionProcess extends HTML_QuickForm_Action
 
 	$sql= "SELECT p.id, firstname, lastname, preferred_name, title, street, postcode, city, c.name as country, countrytext, phone, mobile,";
 	$sql.= " email, t.type as part_type, dateofbirth, m.status as maritalstatus, gender, passport_name, passport_no, ";
-	$sql.= "passport_dateofissue, passport_dateofexpire, n.name as nationality, IF(invitation_letter=0,'No', 'Yes') as ";
+	$sql.= "passport_dateofissue, passport_dateofexpire, n.name as nationality, nationalitytext, IF(invitation_letter=0,'No', 'Yes') as ";
 	$sql.= "invitation_letter_required, IF(vegeterian=0,'No','Yes') as vegetarian, IF(medication=0,'No','Yes') as medication, ";
 	$sql.= "what_medication, disabilities, allergies, dietary, emergency_firstname, emergency_lastname, emergency_phone, ";
 	$sql.= "church_name, church_deno, church_address, groupleader_name, ref_person_firstname, ref_person_lastname, ";
 	$sql.= "ref_person_phone, ref_person_email, ref_person_church_task, groupleader_email, other_conf, team_conf, ";
 	$sql.= "leadership_exp, gl.level_desc as german_skill, el.level_desc as english_skill, l.name as mothertongue, ";
-	$sql.= "i1.name as IN2_team_1, i2.name as IN2_team_2, why_trip, learn_trip, story, why_mission, outreach_organisation, ";
-	$sql.= "musical_ability, outreach_ability, w1.work_area as jobwish_1, w2.work_area as jobwish_2, jobwish_comment, ";
-	$sql.= "special_job, sj_reason, remarks, p.status, appdate";
-	$sql.= ' FROM participants p, countries c, marital_status m, part_type t, countries n, IN2_teams i1, IN2_teams i2, ';
+	$sql.= "p.IN2_team_1, p.IN2_team_2, why_trip, learn_trip, story, why_mission, outreach_organisation, ";
+	$sql.= "musical_ability, p.outreach_ability, w1.work_area as jobwish_1, w2.work_area as jobwish_2, jobwish_comment, ";
+	$sql.= "special_job, sj_reason, p.arrival_date, p.departure_date, p.remarks, p.status, p.appdate";
+	$sql.= ' FROM participants p, countries c, marital_status m, part_type t, countries n, ';
 	$sql.= 'languages l, work_area_list w1, work_area_list w2, english_level el, english_level gl';
-	$sql.= ' where p.id = '. $last_id . ' and c.id = p.country and m.id = p.maritalstatus and t.id = p.part_type and ';
-	$sql.= 'n.id=p.nationality and i1.id=p.IN2_team_1 and i2.id=p.IN2_team_2 and l.id=p.mother_tongue and ';
+	$sql.= ' where p.id = '. $last_id . ' and c.id = p.country and m.id = p.maritalstatus and t.id = p.part_type ';
+	$sql.= 'and n.id=p.nationality and l.id=p.mother_tongue and ';
 	$sql.= 'w1.id=p.jobwish_1 and w2.id=p.jobwish_2 and el.id=p.english_skill and gl.id=german_skill';
-
-      $row = $mdb2->queryRow($sql1);
+      $row = $mdb2->queryRow($sql);
       if (PEAR::isError($row)) {
          die ($row->getMessage());
       }
@@ -805,6 +804,20 @@ class ActionProcess extends HTML_QuickForm_Action
       }
       $text.= "\nPreis: " . $preis; 
       $html.= "\n<br>Preis: " . $preis; 
+       
+      $sql = "SELECT p.country as LandID, n.email AS nat_email FROM participants p, national_motivators n";
+      $sql.= ' WHERE p.id = '. $last_id . ' and n.countryid = p.country';
+      $erg =& $mdb2->query($sql);
+      if (PEAR::isError($erg)) {
+          die ($erg->getMessage());
+      }
+      $cc_empf = 'Eva-Maria.Albert@d.om.org, Dietmar.Schurr@d.om.org';
+      while (($row = $erg->fetchRow())) {
+          $cc_empf.=  ', ' . $row[1];
+	  $landid = $row[0]; 
+      }
+      $erg->free();
+
       $om_mime = new Mail_mime($crlf);
       $om_mime->setTXTBody($text);
       $om_mime->setHTMLBody($html);
@@ -816,7 +829,7 @@ class ActionProcess extends HTML_QuickForm_Action
 
       $om_headers=array( 'From' => $registrationsenderaddress,
            'To' => $registrationhandleraddress,
-	   'Cc' => 'Eva-Maria.Albert@d.om.org',
+	   'Cc' => $cc_empf,
            'Subject' => $om_betreff);
 
       $om_hdrs = $om_mime->headers($om_headers);
@@ -877,12 +890,24 @@ class ActionProcess extends HTML_QuickForm_Action
 	echo "<b>" . htmlentities(T_("Wire transfer:")) . "</b><br>\n"; 
 	echo htmlentities(T_("Please transfer the sum of")) . " " . $preis . " " . T_("Euro"). "<br>\n";
 	echo htmlentities(T_("to")) . "<br>" . T_("OM Europa / Mission-Net") . "<br>\n";
-	echo htmlentities(T_("Account no:")) .  " 5010802" . "<br>\n";
-	global $iban;
-	global $swiftcode;
-	echo $iban . "<br>\n";
-	echo $swiftcode . "<br>\n";
-	echo T_("Address of bank:") . "Evangelische Kreditgenossenschaft / Seidlerstr. 6 / D-34117 Kassel" . "<br>\n";
+        echo htmlentities(T_("Account no:")) .  " 5010802" . "<br>\n";
+        global $iban;
+        global $bank;
+        global $swiftcode;
+        echo $iban . "<br>\n";
+        echo $swiftcode . "<br>\n";
+        echo T_("Address of bank:") . " " . $bank . "<br>\n";
+
+	if ($landid == 3) {
+	  echo htmlentities(T_("Participants from Switzerland might use the following Swiss account to avoid banking fees:")) . "<br>\n";
+	  echo htmlentities(T_("Account no:")) .  " 91-479018-6" . "<br>\n";
+	  global $swiss_iban;
+	  global $swiss_bank;
+	  global $swiss_swiftcode;
+	  echo $swiss_iban . "<br>\n";
+	  echo $swiss_swiftcode . "<br>\n";
+	  echo T_("Address of bank:") . $swiss_bank . "<br>\n";
+	} 
 	echo htmlentities(T_("and use this reference:")) . "<b> M09-" . $last_id . "</b><br>\n";
 	echo "<br><b>" . htmlentities(T_("Credit Card Payment:")) . "</b><br>\n"; 
 	echo htmlentities(T_("If you prefer to pay by credit or debit card, we have to add a supplement of 10 Euro for the transaction.")) . "<br>\n";
