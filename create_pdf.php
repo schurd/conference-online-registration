@@ -42,8 +42,11 @@ require_once('registration.pdf/fpdf.php');
     }  
   } 
   global $iban;
+  global $swiss_iban;
   global $bank;
+  global $swiss_bank;
   global $swiftcode;
+  global $swiss_swiftcode;
 ///*DEBUG
 //print_r($data);
 $var_prename = $data["firstname"];
@@ -198,9 +201,9 @@ $pdf->SetTitle("Registration for Mission-Net 2009");
         $pdf->Write(5, T_("Wire transfer"));
         $pdf->Ln();
         $pdf->SetFont('Arial','',12);
-        $pdf->Write(5, T_("Please transfer the sum of"));
-        $pdf->SetX(80);
-        $pdf->Write(5, $preis . " " . T_("Euro"));
+        $pdf->Write(5, T_("Please transfer the sum of") . " " . $preis . " " . T_("Euro"));
+//        $pdf->SetX(80);
+//        $pdf->Write(5, $preis . " " . T_("Euro"));
         $pdf->Ln();
         $pdf->Write(5, T_("to"));
         $pdf->SetX(80);
@@ -220,12 +223,31 @@ $pdf->SetTitle("Registration for Mission-Net 2009");
         $pdf->SetX(80);
         $pdf->Write(5, $bank);
         $pdf->Ln();
+	if ( $land == "Switzerland" ) {
+	  $pdf->Write(5, T_("Participants from Switzerland might use the following Swiss account to avoid banking fees:"));
+	  $pdf->Ln();
+	  $pdf->SetX(80);
+	  $pdf->Write(5, T_("Account no:") . " 91-479018-6");
+	  $pdf->Ln();
+	  $pdf->SetX(80);
+	  $pdf->Write(5, $swiss_iban);
+	  $pdf->Ln();
+	  $pdf->SetX(80);
+	  $pdf->Write(5, T_("SWIFT CODE: ") . $swiss_swiftcode );
+	  $pdf->Ln();
+	  $pdf->SetX(20);
+	  $pdf->Write(5, T_("Address of bank:"));
+	  $pdf->SetX(80);
+	  $pdf->Write(5, $swiss_bank);
+	  $pdf->Ln();
+	}
+
         $pdf->Write(5, T_("and use this reference:"));
         $pdf->SetFont('Arial','B',12);
         $pdf->SetX(80);
         $pdf->Write(5, "M09-" . $id);
         $pdf->Ln();
-	if ( $data["country"] == 3 ) {
+	if ( $land == "Switzerland" ) {
 	  if ( $data["part_type"] == 2 ) {
             $pdf->Image("images/EZ_ch_st.jpg",$pdf->GetX(), $pdf->GetY(), 120, 60, 'jpeg');
 	  } else {
