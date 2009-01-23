@@ -811,7 +811,7 @@ class ActionProcess extends HTML_QuickForm_Action
       if (PEAR::isError($erg)) {
           die ($erg->getMessage());
       }
-      $cc_empf = 'Eva-Maria.Albert@d.om.org, Dietmar.Schurr@d.om.org';
+      $cc_empf = 'Eva-Maria.Albert@d.om.org';
       while (($row = $erg->fetchRow())) {
           $cc_empf.=  ', ' . $row[1];
 	  $landid = $row[0]; 

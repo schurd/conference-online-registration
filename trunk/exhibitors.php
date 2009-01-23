@@ -42,7 +42,7 @@ function nichtleer($felder)
 
    $mdb2 =& MDB2::singleton(); 
    // List der Länder laden
-   $work_sql = 'SELECT id, name, iso_code, fee, service_team_fee FROM countries ORDER by name';
+   $work_sql = 'SELECT id, name, iso_code, exhib_fee, service_team_fee FROM countries ORDER by name';
    $c_arr = array();
    $fee_arr = array();
    $nation_arr = array();
@@ -143,8 +143,10 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->registerRule('rule_nichtleer', 'callback', 'nichtleer');
       $this->addRule(array('medication', 'what_medication'), 'Please state what medication you require','rule_nichtleer');
       $this->addRule(array('invitationletter', 'passportno'), 'We need to have your passport details if you need a letter of invitation','rule_nichtleer');
-      //$this->addGroupRule('nationality', 'Please enter your nationality', 'required');
-      //$this->addRule('nationality', 'Please enter your nationality', 'nonzero',null);
+      $this->addGroupRule('nationgroup', array('nationality' => array(        // Rules for nationality
+          array('Please enter your nationality','nonzero')),
+        ));
+
       $this->addRule('firstname', 'Please enter your firstname', 'required',null);
       $this->addRule('firstname', 'Please enter letters only', 'nopunctuation', null);
       $this->addRule('lastname', 'Please enter your lastname', 'required',null);
@@ -446,7 +448,7 @@ class ActionProcess extends HTML_QuickForm_Action
          //  echo ($mdb2->getMessage().' - '.$mdb2->getUserinfo());
       }
       $sth->Free();
-      $sql1 = "SELECT fee, name FROM countries WHERE id=" . $values['countrygroup']['country'];
+      $sql1 = "SELECT exhib_fee, name FROM countries WHERE id=" . $values['countrygroup']['country'];
       $erg =& $mdb2->query($sql1);
         if (PEAR::isError($erg)) {
            die ($erg->getMessage());
@@ -511,7 +513,7 @@ class ActionProcess extends HTML_QuickForm_Action
       $html.= T_("You may download this PDF file right here:") . " ";
       $html.= "<a href='https://register.mission-net.org/" . $pdffile . "'>" . T_("PDF Document") . "</a>";
       $html.= "\n<br><br>\n";
-      $html.= T_("Thanks again for registering for Mission-Net, and we trust that this event will be an exciting new step in your journey in the Christian faith");
+      $html.= T_("Thanks again for registering for Mission-Net, and we trust that this event will be an exciting new step in your journey in the Christian faith.");
       $html.= "\n<br><br><br>\n";
       $html.= T_("Many Blessings,");
       $html.= "\n<br><br>\n";
@@ -585,7 +587,7 @@ class ActionProcess extends HTML_QuickForm_Action
         <head>
           <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
           <title>
-	 <?php echo htmlentities(T_("Mission Net Online Registration")); ?>
+	 <?php echo "Mission Net Online Registration"; ?>
 	 </title>
         </head>
         <body>
@@ -594,52 +596,53 @@ class ActionProcess extends HTML_QuickForm_Action
          <img src="images/MN_Logo_kleiner.png" alt="Mission-Net Logo">
          </td><td>
          <font size="-2">
-	 <?php echo htmlentities(T_("Germany")) . "<br>" . htmlentities(T_("8. April to 13. April 2009")) . "<br>Oldenburg</font>"; ?>
+	 <?php echo "Germany<br>8. April to 13. April 2009<br>Oldenburg</font>"; ?>
          </td>
          </tr>
         </table>
 	<h2>
 	<?php 
-	echo htmlentities(T_("Confirmation of registration for Mission-Net 2009"));
+	echo "Confirmation of registration for Mission-Net 2009";
 	echo '</h2>';
-	$format = htmlentities(T_("Dear")) . " %1\$s";
+	$format = "Dear" . " %1\$s";
 	printf($format, $values["firstname"]);
 	echo ", <br><br>\n";
-	echo htmlentities(T_('we are so excited that you have just registered for Mission-net in Oldenburg, 2009. We are looking forward to meeting you and 6000 others from all over Europe.'));
+	echo 'Thank you for registering to be an exhibitor at mission-net 2009, in Oldenburg, Germany. We are excited that you will be a part of this event and we are looking forward to meeting you and many others from all over Europe.';
 	echo "\n<br><br>\n";
-	echo htmlentities(T_('You are in for a great time with great worship, speakers, and of course the chance to meet like minded people from all over Europe.'));
+	echo 'We are anticipating a great time together and we hope that many meaningful conversations will take place at your stand as you share your heart for missions. In addition to that you have the opportunity to enjoy great worship, speakers, and of course the chance to meet like minded people from all over Europe.';
 	echo "\n<br><br>\n";
-	echo htmlentities(T_("We have a National Coordinator in your country who this message has also been sent to. Nearer the time they will be in contact with you to give you more information on others from your country that will be attending this exciting event, as well as practical details of things like travel and what you need to bring."));
+	echo "If you have questions regarding the exhibition, please get in touch with the contact person from your organisation. They will receive detailed information that they can pass on to you as well as regular updates.";
 	echo "\n<br><br><br>\n";
-	echo htmlentities(T_("In order for your registration to be processed please ensure that the congress fee is paid. On receipt of payment, we will send you another confirmation e-mail that the money has received which will also be sent to the National Coordinator in your country."));
+	echo "In order for your registration to be processed please ensure that the congress fee is paid. If you are under 18 years old, you are also required to send in the PDF form sent with the confirmation e-mail, signed by you and your parents. On receipt of payment, we will send you another confirmation e-mail that the money has received.";
 	echo "\n<br><br>\n";
-	echo htmlentities(T_("Please ensure that this happens so that we can process your registration as quickly as possible."));
+	echo "Please ensure that this happens so that we can process your registration as quickly as possible.";
 	echo "\n<br><br>\n";
-	echo htmlentities(T_("Thanks again for registering for Mission-Net and we trust that this event will be an exciting new step in your journey in the Christian faith."));
+	echo "Thanks again for registering for Mission-Net and we trust that this event will be an exciting new step in your journey in the Christian faith.";
 	echo "\n<br><br>\n";
-	echo htmlentities(T_("Many Blessings"));
+	echo "Many Blessings";
 	echo "\n<br><br>\n";
-	echo htmlentities(T_("Mission-Net Congress Management Team"));
+	echo "Mission-Net Congress Management Team";
 	echo "\n<br><br>\n";
-	echo "<b>" . htmlentities(T_("Payment Instructions")) . "</b><br>\n"; 
-	echo htmlentities(T_("There are two ways of paying for Mission-Net 2009:")) . "<br>\n";
-	echo "<ol><li>" . htmlentities(T_("Wire transfer of money to our bank account"))  . "</li>\n";
-	echo "<li>" . htmlentities(T_("Credit Card Payment"))  . "</li></ol><br>\n";
-	echo "<b>" . htmlentities(T_("Wire transfer:")) . "</b><br>\n"; 
-	echo htmlentities(T_("Please transfer the sum of")) . " " . $preis . " " . T_("Euro"). "<br>\n";
-	echo htmlentities(T_("to")) . "<br>" . T_("OM Europa / Mission-Net") . "<br>\n";
-	echo htmlentities(T_("Account no:")) .  " 91-479018-6" . "<br>\n";
+	echo "<b>" . "Payment Instructions" . "</b><br>\n"; 
+	echo "There are two ways of paying for Mission-Net 2009:" . "<br>\n";
+	echo "<ol><li>" . "Wire transfer of money to our bank account" . "</li>\n";
+	echo "<li>" . "Credit Card Payment" . "</li></ol><br>\n";
+	echo "<b>" . "Wire transfer:" . "</b><br>\n"; 
+	echo "Please transfer the sum of " . $preis . " Euro<br>\n";
+	echo "to<br>OM Europa / Mission-Net<br>\n";
+	echo "Account no: 5010802<br>\n";
 	global $iban;
+	global $swiftcode;
+	global $bank;
 	echo $iban . "<br>\n";
-	echo T_("SWIFT CODE: POFICHBEXXX") . "<br>\n";
-	echo T_("Address of bank:") . "Swiss Post / PostFinance / CH-3030 Bern" . "<br>\n";
-	echo htmlentities(T_("and use this reference:")) . "<b> M09-" . $last_id . "</b><br>\n";
-	echo "<br><b>" . htmlentities(T_("Credit Card Payment:")) . "</b><br>\n"; 
-	echo htmlentities(T_("If you prefer to pay by credit or debit card, we have to add a supplement of 10 Euro for the transaction.")) . "<br>\n";
+	echo $swiftcode . "<br>\n";
+	echo "Address of bank: " . $bank . "<br>\n";
+	echo "and use this reference:" . "<b> M09-" . $last_id . "</b><br>\n";
+	echo "<br><b>" . "Credit Card Payment:" . "</b><br>\n"; 
+	echo "If you prefer to pay by credit or debit card, we have to add a supplement of 10 Euro for the transaction." . "<br>\n";
 	$gsumme = $preis + 10;
-	echo htmlentities(T_("Please transfer the sum of")) . " " . $preis . " Euro + " . T_("10 Euro"). 
-	" = " . money_format('%i', $gsumme) . " " . htmlentities(T_("Euro")) . "<br>\n";
-	echo htmlentities(T_("by clicking this link:"));
+	echo "Please transfer the sum of " . $preis . " Euro + 10 Euro = " . money_format('%i', $gsumme) . " Euro<br>\n";
+	echo "by clicking this link:";
 ?>
 <form method="post" action="https://www.paypal.com/cgi-bin/webscr" target="neu">
 <input type="hidden" name="cmd" value="_xclick">
@@ -650,15 +653,15 @@ class ActionProcess extends HTML_QuickForm_Action
 <input type="hidden" name="currency_code" value="EUR">
 <input type="hidden" name="on0" value="<?php echo $values['lastname'] . ', ' . $values['firstname']; ?>">
 <input type="hidden" name="os0" value="">
-<input type="hidden" name="on1" value="Reference No: <?php echo 'M09-' . $last_id; ?> ">
+<input type="hidden" name="on1" value="Reference No: <?php echo 'M09E-' . $last_id; ?> ">
 <input type="hidden" name="os1" value="">
 <br>
 <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_paynow_LG.gif">
 </form>
 <?php
-	echo htmlentities(T_("Note:")) . " " . htmlentities(T_("Note: Your registration is only valid as soon as we received your payment.")) . "<br>\n";
-	echo htmlentities(T_("If you are making an individual payment, please pay within 2 weeks of completing your registration.")) . "<br>\n";
-	echo htmlentities(T_("If you are making a group payment, an invoice will be issued to your organisation as soon as all the exhibitors from your organisation have registered.")) . "<br>\n";
+	echo "Note: Your registration is only valid as soon as we received your payment  and if you are under 18 years old you have to send the signed PDF form." . "<br>\n";
+	echo "If you are making an individual payment, please pay within 2 weeks of completing your online registration." . "<br>\n";
+	echo "If you are making a group payment, an invoice will be issued to your organisation as soon as all the exhibitors from your organisation have registered." . "<br>\n";
 	session_destroy();
          } 
 	} 
