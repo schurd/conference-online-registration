@@ -72,7 +72,7 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->addElement('header', null, 'Registration for Staff at Mission-net 2009 - page 1 of 3');
       $cost_hint2 = "<SPAN ID='preis'>" . $cost_hint . "</SPAN>";
       $this->addElement('select', 'parttype', 'I will join the conference as or will work in (please choose):',
-        array('10'=>'Supervisor in:', '11'=>'Band', '12'=>'Speaker', '13'=>'Logistics', '14'=>'National Motivator for:', 
+        array('0'=>'undefined', '10'=>'Supervisor in:', '11'=>'Band', '12'=>'Speaker', '13'=>'Logistics', '14'=>'National Motivator for:', 
 	'15'=>'Programme', '16'=>'Others:'));
       $this->addElement('text', 'staff_text', "Details for your job/area:", array('size' => 55, 'maxlength' => 70, 'title'=>'Please give details about your job at Mission-Net'));
 
@@ -133,8 +133,8 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->addElement('submit', $this->getButtonName('next'), 'Proceed to next page'); 
 
       // Regel hinzufuegen 
-      //$this->registerRule('rule_nichtleer', 'callback', 'nichtleer');
-      $this->addRule(array('medication', 'what_medication'), 'Please state what medication you require','rule_nichtleer');
+      $this->addRule('parttype', 'Please tell us what staff function you will have', 'required');
+      $this->addRule('parttype', 'Please tell us what staff function you will have', 'nonzero');
       $this->addRule(array('invitationletter', 'passportno'), 'We need to have your passport details if you need a letter of invitation','rule_nichtleer');
       //$this->addGroupRule('nationgroup', 'Please enter your nationality', 'required');
       //$this->addRule('nationality', 'Please enter your nationality', 'nonzero',null);
@@ -274,7 +274,7 @@ class ActionDisplay extends HTML_QuickForm_Action_Display
   	 <td class=\"white-cell\">
    	 <img src=\"images/MN_Logo_kleiner.png\" alt=\"Mission-net Logo\" width=\"160\" height=\"90\">
    	 </td><td class=\"title-cell\">Mission-Net<br>8. - 13. April 2009<br>Oldenburg<br>Germany
-  	 </td><td style=\"color:red\">Registration for Staff</td>
+  	 </td><td style=\"color:red; font-weight:bold; font-size:200%\">Registration for Staff</td>
   	 </tr></tbody>
   	</table>"; 
       echo $renderer->toHtml(); 
@@ -359,7 +359,7 @@ class ActionProcess extends HTML_QuickForm_Action
 		maritalstatus = ?, gender = ?, passport_name = ?, passport_no = ?, passport_dateofissue = ?, 
 		passport_dateofexpire = ?, nationality = ?, nationalitytext = ?, invitation_letter = ?, 
 		emergency_firstname = ?, emergency_lastname = ?, emergency_phone = ?, sj_reason = ?, 
-		part_type = ?, status = ?';
+		special_job = ?, part_type = ?, status = ?';
       $sth = $mdb2->prepare($sql1, $typen, MDB2_PREPARE_RESULT);
       if (PEAR::isError($mdb2)) {
         die("Error while preparing : " . $mdb2->getMessage());
@@ -384,7 +384,7 @@ class ActionProcess extends HTML_QuickForm_Action
 
        $daten[] = utf8_decode($values['staff_text']);
        $daten[] = $values['parttype'];
-       //$daten[] = '5';
+       $daten[] = '5';  // part type == 5 means staff
        $daten[] = '1';	// status field
       $affRow=$sth->execute($daten);
       if (PEAR::isError($affRow)) {
@@ -569,11 +569,13 @@ class ActionProcess extends HTML_QuickForm_Action
 	echo "<b>" . htmlentities(T_("Wire transfer:")) . "</b><br>\n"; 
 	echo htmlentities(T_("Please transfer the sum of")) . " " . $preis . " " . T_("Euro"). "<br>\n";
 	echo htmlentities(T_("to")) . "<br>" . T_("OM Europa / Mission-Net") . "<br>\n";
-	echo htmlentities(T_("Account no:")) .  " 91-479018-6" . "<br>\n";
+	echo htmlentities(T_("Account no:")) .  " 5010802" . "<br>\n";
 	global $iban;
+	global $swiftcode;
+	global $bank;
 	echo $iban . "<br>\n";
-	echo T_("SWIFT CODE: POFICHBEXXX") . "<br>\n";
-	echo T_("Address of bank:") . "Swiss Post / PostFinance / CH-3030 Bern" . "<br>\n";
+	echo $swiftcode . "<br>\n";
+	echo T_("Address of bank:") . $bank . "<br>\n";
 	echo htmlentities(T_("and use this reference:")) . "<b> M09-" . $last_id . "</b><br>\n";
 	echo "<br><b>" . htmlentities(T_("Credit Card Payment:")) . "</b><br>\n"; 
 	echo htmlentities(T_("If you prefer to pay by credit or debit card, we have to add a supplement of 10 Euro for the transaction.")) . "<br>\n";
