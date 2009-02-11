@@ -143,7 +143,7 @@ class Form_Personal extends HTML_QuickForm_Page
       $options = array('language' => 'en', 'format' => 'dMY', 'minYear' => 1920, 'maxYear'=>1995, 'addEmptyOption'=>true);
       $this->addElement('date', 'dateofbirth', htmlentities(T_('Date of birth:')), $options);
       $this->addElement('text', 'passportno', htmlentities(T_('Passport No.:')), array('size' => 40, 'maxlength' => 55));
-      $this->addElement('date', 'dateofissue', htmlentities(T_('Passport date of issue:')), array('language' => 'en', 'format' => 'dMY', 'minYear' => 1990, 'maxYear'=>2008));
+      $this->addElement('date', 'dateofissue', htmlentities(T_('Passport date of issue:')), array('language' => 'en', 'format' => 'dMY', 'minYear' => 1990, 'maxYear'=>2009));
       $this->addElement('date', 'dateofexpire', htmlentities(T_('Passport date of expire:')), array('language' => 'en', 'format' => 'dMY', 'minYear' => 2007, 'maxYear'=>2029));
 
       $nationgroup[]=HTML_QuickForm::createElement('select', 'nationality', 'Nationality:', $nation_arr,
