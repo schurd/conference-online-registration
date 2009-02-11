@@ -505,8 +505,15 @@ class Form_Bankdaten extends HTML_QuickForm_Page
       	'2009-04-05'=>'05. April',
       	'2009-04-06'=>'06. April',
       	'2009-04-07'=>'07. April',
-	'2009-04-08'=>'08. April');
+	'2009-04-08'=>'08. April',
+	'2009-04-09'=>'09. April',
+	'2009-04-10'=>'10. April',
+	'2009-04-11'=>'11. April',
+	'2009-04-12'=>'12. April');
       $dep_array = array(
+	'2009-04-09' => '09. April',
+	'2009-04-10' => '10. April',
+	'2009-04-11' => '11. April',
 	'2009-04-12' => '12. April',
 	'2009-04-13' => '13. April',
 	'2009-04-14' => '14. April');
@@ -758,10 +765,10 @@ class ActionProcess extends HTML_QuickForm_Action
         }
         $message = $mime->get();
         $betreff = htmlentities(T_('Mission Net registration 2009')) . ' ' . $values['lastname'] . ', ' . 
-		$values['firstname'] . ', ' . $values["nationality"];
+		$values['firstname'] . ', ' . $values["nationality"] . ' ' . $last_id ;
         $headers=array( 'From' => $registrationsenderaddress,
             'To' => $registrationhandleraddress,
-            'Cc' => 'Eva-Maria.Albert@d.om.org',
+            'Cc' => 'Eva-Maria.Walter@mission-net.org',
             'Subject' => $betreff);
         $hdrs = $mime->headers($headers);
         $empfaenger = $values["email"];
@@ -811,9 +818,13 @@ class ActionProcess extends HTML_QuickForm_Action
       if (PEAR::isError($erg)) {
           die ($erg->getMessage());
       }
-      $cc_empf = 'Eva-Maria.Albert@d.om.org';
+      $cc_empf = '';
       while (($row = $erg->fetchRow())) {
-          $cc_empf.=  ', ' . $row[1];
+          if ( $cc_empf == '' ) {
+            $cc_empf.=  $row[1];
+	  } else {
+            $cc_empf.=  ', ' . $row[1];
+	  }
 	  $landid = $row[0]; 
       }
       $erg->free();
