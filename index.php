@@ -281,7 +281,7 @@ class Form_three extends HTML_QuickForm_Page
 	'http://www.mission-net.org/in2-teams.html', htmlentities(T_('Link to IN2 information')), 'target="_blank"');
 
       $this->addElement('static', 'in2_hint', htmlentities(T_('IN2 Hint')), htmlentities(T_('If you are planning to join an IN2 Team, please answer these questions as well. We send your request to the organisations organizing this team and they will be in further contact with you. If you wish to go on an IN2 Team after your registration or you need to make changes of your online registration, please send an email to registration@mission-net.org.')));
-      $work_sql = 'SELECT id, name FROM IN2_teams ORDER by id';
+      $work_sql = 'SELECT id, name FROM IN2_teams ORDER by name';
       unset($s_arr);
       $s_arr[0] = htmlentities(T_('none'));
       $erg =& $mdb2->query($work_sql);
