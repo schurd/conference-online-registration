@@ -114,7 +114,7 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->addElement('header', null, 'Passport details');
       $this->addElement('text', 'passportname', 'Full name if different from above:', array('size' => 40, 'maxlength' => 110));
 
-      $this->addElement('date', 'dateofbirth', 'Date of birth:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 1920, 'maxYear'=>2008, 'addEmptyOption'=>true));
+      $this->addElement('date', 'dateofbirth', 'Date of birth:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 1920, 'maxYear'=>2009, 'addEmptyOption'=>true));
       $this->addElement('text', 'passportno', 'Passport No.:', array('size' => 40, 'maxlength' => 55));
       $this->addElement('date', 'dateofissue', 'Passport date of issue:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 1990, 'maxYear'=>2009));
       $this->addElement('date', 'dateofexpire', 'Passport date of expire:', array('language' => 'en', 'format' => 'dMY', 'minYear' => 2007, 'maxYear'=>2029));
