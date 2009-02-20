@@ -528,7 +528,7 @@ class Form_Bankdaten extends HTML_QuickForm_Page
       $this->addElement('html', '<td style="background-color: #CCCCCC; color:red;" colspan="2"><b>' .
         htmlentities(T_('Additional questions for those joining Special Services')) . '</b></td>');
       $s_arr = array('0' => htmlentities(T_('None')), '1'=>htmlentities(T_('Counsellor')),
-        '2'=>htmlentities(T_('MAC - Mission Advice Center')),'3'=>htmlentities(T_('Translator')));
+        '2'=>htmlentities(T_('MAC - Mission Advice Center')),'3'=>htmlentities(T_('Translator')), '4'=>htmlentities(T_('Prayerteam')));
       $this->addElement('select', 'counsellor', htmlentities(T_('Please choose here if you are interested in working as:')), $s_arr);
       $this->addElement('static','couns_hint',htmlentities(T_('Information')),
         htmlentities(T_('We will review your application, but can not guarantee cooperation! We will let you know until 2009.')));
