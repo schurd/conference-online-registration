@@ -44,6 +44,7 @@ function nichtleer($felder)
   // List der Länder laden
   $work_sql = 'SELECT id, name, iso_code, fee, service_team_fee FROM countries ORDER by name';
   $c_arr = array();
+  $st_arr = array();
   $fee_arr = array();
   $country = substr(strtoupper($_SESSION["resi"]), -2, 2);
   $erg =& $mdb2->query($work_sql);
@@ -55,6 +56,16 @@ function nichtleer($felder)
       $fee_arr[$row[2]] = array($row[3], $row[4], $row[0]);
   }
   $erg->free();
+  $sql = 'SELECT id, staff_typ FROM staff_type ORDER by id';
+  $erg =& $mdb2->query($sql);
+  if (PEAR::isError($erg)) {
+     die ($erg->getMessage());
+  }
+  while (($row = $erg->fetchRow())) {
+     $st_arr[$row[0]] = $row[1];
+  }
+  $erg->Free();
+
   $cost_hint = 'Cost for accommodation, food and program (without travel): ' . '<b>' . $fee_arr[$country][0] . ' Euro</b>'; 
 
 // class for the first page 
@@ -66,14 +77,14 @@ class Form_Personal extends HTML_QuickForm_Page
       $this->_formBuilt = true; 
       // create Form 
       global $c_arr;
+      global $st_arr;
       global $fee_arr;
       global $cost_hint;
       global $country;
       $this->addElement('header', null, 'Registration for Staff at Mission-net 2009 - page 1 of 3');
       $cost_hint2 = "<SPAN ID='preis'>" . $cost_hint . "</SPAN>";
-      $this->addElement('select', 'parttype', 'I will join the conference as or will work in (please choose):',
-        array('0'=>'undefined', '10'=>'Supervisor in:', '11'=>'Band', '12'=>'Speaker', '13'=>'Logistics', '14'=>'National Motivator for:', 
-	'15'=>'Programme', '16'=>'Others:'));
+
+      $this->addElement('select', 'parttype', 'I will join the conference as or will work in (please choose):', $st_arr);
       $this->addElement('text', 'staff_text', "Details for your job/area:", array('size' => 55, 'maxlength' => 70, 'title'=>'Please give details about your job at Mission-Net'));
 
       $landgroup[]=HTML_QuickForm::createElement('select', 'country', 'Country of residence:', $c_arr,
