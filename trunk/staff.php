@@ -370,7 +370,7 @@ class ActionProcess extends HTML_QuickForm_Action
 		maritalstatus = ?, gender = ?, passport_name = ?, passport_no = ?, passport_dateofissue = ?, 
 		passport_dateofexpire = ?, nationality = ?, nationalitytext = ?, invitation_letter = ?, 
 		emergency_firstname = ?, emergency_lastname = ?, emergency_phone = ?, sj_reason = ?, 
-		special_job = ?, part_type = ?, status = ?';
+		special_job = ?, part_type = ?, jobwish_2 = ?, status = ?';
       $sth = $mdb2->prepare($sql1, $typen, MDB2_PREPARE_RESULT);
       if (PEAR::isError($mdb2)) {
         die("Error while preparing : " . $mdb2->getMessage());
@@ -396,6 +396,7 @@ class ActionProcess extends HTML_QuickForm_Action
        $daten[] = utf8_decode($values['staff_text']);
        $daten[] = $values['parttype'];
        $daten[] = '5';  // part type == 5 means staff
+       $daten[] = $values['exhib_acco'];
        $daten[] = '1';	// status field
       $affRow=$sth->execute($daten);
       if (PEAR::isError($affRow)) {
