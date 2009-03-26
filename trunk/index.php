@@ -555,6 +555,7 @@ class Form_Bankdaten extends HTML_QuickForm_Page
       $this->addElement('static', 'pay_hint', htmlentities(T_('Payment Instructions')), $pay_text);
       $this->addElement('static', 'pay_hint2', htmlentities(T_('Note')), htmlentities(T_('Your registration is only valid as soon as we received your payment.')));
       $this->addElement('static', 'pay_hint2', '', htmlentities(T_('You have to pay within 2 weeks of completing your registration, otherwise the system will delete your registration automatically.')));
+      $this->addElement('static', 'pay_hint3', '', htmlentities(T_('Please note that we will only process payments we receive until 30th March that are in our account.')));
 
       // add the buttons
       $navi[] = $this->createElement('submit', $this->getButtonName('back'), utf8_encode(T_('Back to previous page')));
@@ -945,6 +946,7 @@ class ActionProcess extends HTML_QuickForm_Action
 //	echo "<a href='http://www.paypal.com?func=missionnet09'>http://www.paypal.com?func=missionnet09</a><br>";
 	echo htmlentities(T_("Note:")) . " " . htmlentities(T_("Your registration is only valid as soon as we received your payment and if you are under 18 years the signed PDF form.")) . "<br>\n";
 	echo htmlentities(T_("You have to pay within 2 weeks after completing your online registration (this is now), otherwise the system will delete your registration automatically")) . "<br>\n";
+	echo htmlentities(T_("Please note that we will only process payments we receive until 30th March that are in our account.")) . "<br>\n";
 	session_destroy();
          } 
 	} 
