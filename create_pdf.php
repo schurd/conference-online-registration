@@ -276,6 +276,7 @@ $pdf->SetTitle("Registration for Mission-Net 2009");
         $pdf->Ln();
         $pdf->Ln();
         $pdf->Write(5, T_("You have to pay within 2 weeks of completing your registration, otherwise the system will delete your registration automatically."));
+        $pdf->Write(5, T_("Please note that we will only process payments we receive until 30th March that are in our account."));
 //################REGISTRATION END########
 
 //################OUTPUT###################
