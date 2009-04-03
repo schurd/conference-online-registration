@@ -963,7 +963,7 @@ class ActionProcess extends HTML_QuickForm_Action
 	// Formularseiten hinzufuegen 
 	$controller->addPage($seite1); 
  	$controller->addPage($seite2); 
-	$controller->addPage($seite3); 
+	//$controller->addPage($seite3); 
  	$controller->addPage($seite4); 
 
 // add the actions 
